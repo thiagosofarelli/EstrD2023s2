@@ -41,3 +41,109 @@ maxDelPar (n, m) = if (n > m)
 -- ejemplo 4
 
 -- sumar 12 (-2)
+
+-- Ejercicio 3.1
+
+data Dir = Norte | Sur | Este | Oeste
+    deriving Show
+
+-- a
+
+opuesto :: Dir -> Dir
+opuesto Norte = Sur
+opuesto Sur = Norte
+opuesto Este = Oeste
+opuesto Oeste = Este
+
+-- b
+
+iguales :: Dir -> Dir -> Bool
+iguales Norte Norte = True
+iguales Sur Sur = True
+iguales Este Este = True
+iguales Oeste Oeste = True
+iguales _ _ = False
+
+-- c
+
+siguiente :: Dir -> Dir
+siguiente Norte = Este
+siguiente Este = Sur
+siguiente Sur = Oeste
+siguiente Oeste = Norte
+
+-- Si se supone que no existe la siguiente dirección a Oeste,
+-- la función sería parcial ya que no funcionaría con todas las
+-- variantes del tipo de dato Dir, y la precondición
+-- de la función sería que no se la puede llamar con 'Oeste'.
+
+-- Ejercicio 3.2
+
+data DiaDeSemana = Lunes | Martes | Miercoles | Jueves | Viernes | Sabado | Domingo
+    deriving Show
+
+-- a
+
+primerYUltimoDia :: (DiaDeSemana, DiaDeSemana)
+primerYUltimoDia = (primerDiaDeSemana, ultimoDiaDeSemana)
+
+primerDiaDeSemana :: DiaDeSemana
+primerDiaDeSemana = Lunes
+
+ultimoDiaDeSemana :: DiaDeSemana
+ultimoDiaDeSemana = Domingo
+
+-- b 
+
+empiezaConM :: DiaDeSemana -> Bool
+empiezaConM Martes = True
+empiezaConM Miercoles = True
+empiezaConM _ = False
+
+-- c
+
+vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool
+vieneDespues Martes Lunes = True
+vieneDespues Miercoles Martes = True
+vieneDespues Jueves Miercoles = True
+vieneDespues Viernes Jueves = True
+vieneDespues Sabado Viernes = True
+vieneDespues Domingo Sabado = True
+vieneDespues Lunes Domingo = True
+vieneDespues _ _ = False 
+
+-- d
+
+estaEnElMedio :: DiaDeSemana -> Bool
+estaEnElMedio Martes = True
+estaEnElMedio Miercoles = True
+estaEnElMedio Jueves = True
+estaEnElMedio Viernes = True
+estaEnElMedio Sabado = True
+estaEnElMedio _ = False
+
+-- Ejercicio 3.3
+
+-- a
+
+negar :: Bool -> Bool
+negar True = False
+negar False = True
+
+-- b 
+
+implica :: Bool -> Bool -> Bool
+implica True False = False
+implica _ _ = True
+
+-- c
+
+yTambien :: Bool -> Bool -> Bool
+yTambien True True = True
+yTambien _ _ = False
+
+-- d
+
+oBien :: Bool -> Bool -> Bool
+oBien False False = False
+oBien _ _ = True
