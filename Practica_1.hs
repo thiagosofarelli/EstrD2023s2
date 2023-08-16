@@ -147,3 +147,37 @@ yTambien _ _ = False
 oBien :: Bool -> Bool -> Bool
 oBien False False = False
 oBien _ _ = True
+
+-- Ejercicio 4.1
+
+-- 1 
+
+data Persona = P String Int
+    deriving Show
+
+nombre :: Persona -> String
+nombre (P n _) = n
+
+edad :: Persona -> Int
+edad (P _ e) = e
+
+crecer :: Persona -> Persona
+crecer (P n e) = P n (e+1)
+
+cambioDeNombre :: String -> Persona -> Persona
+cambioDeNombre nuevoNombre (P n e) = P nuevoNombre e
+
+esMayorQueLaOtra :: Persona -> Persona -> Bool
+esMayorQueLaOtra (P _ e1) (P _ e2) = if (e1 > e2)
+                                     then True
+                                     else False
+
+laQueEsMayor :: Persona -> Persona -> Persona
+laQueEsMayor (P n1 e1) (P n2 e2) = if (e1 > e2)
+                                     then P n1 e1
+                                     else P n2 e2
+                            
+
+thiago = P "Thiago" 20
+valentina = P "Valentina" 19
+
