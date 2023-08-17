@@ -232,3 +232,49 @@ juntarPokemon (e1, e2) = listaDePokemones e1 ++ listaDePokemones e2
 
 listaDePokemones :: Entrenador -> [Pokemon]
 listaDePokemones (E _ poke1 poke2) = poke1:poke2:[]
+
+-- Ejercicio 5.1
+
+-- a
+
+loMismo :: a -> a
+loMismo a = a
+
+siempreSiete :: a -> Int
+siempreSiete a = 7
+
+swap :: (a, b) -> (b, a)
+swap (a, b) = (b, a)
+
+-- b
+
+-- Estas funciones son polimórficas ya que pueden ser utilizadas
+-- con argumentos de cualquier tipo.
+
+-- Ejercicio 6
+
+-- 2
+
+estaVacia :: [a] -> Bool
+estaVacia [] = True
+estaVacia _ = False
+
+-- 3
+
+elPrimero :: [a] -> a
+elPrimero (a:_) = a
+elPrimero _ = error "La lista no contiene ningún elemento"
+
+-- 4 
+
+sinElPrimero :: [a] -> [a]
+sinElPrimero (_:a) = a
+sinElPrimero _ = error "La lista no contiene ningún elemento"
+
+-- 5
+
+splitHead :: [a] -> (a, [a])
+splitHead a = ((elPrimero a), (sinElPrimero a))
+splitHead _ = error "La lista no contiene ningún elemento"
+
+
