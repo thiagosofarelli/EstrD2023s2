@@ -176,33 +176,59 @@ laQueEsMayor :: Persona -> Persona -> Persona
 laQueEsMayor (P n1 e1) (P n2 e2) = if (e1 > e2)
                                      then P n1 e1
                                      else P n2 e2
-                                     
+
+-- Personas                               
 thiago = P "Thiago" 20
 valentina = P "Valentina" 19
 
 -- Ejercicio 4.2
 
-data Pokemon = Poke Tipo Int   
+data Pokemon = Poke TipoDePokemon Int   
               -- Tipo Energia   
      deriving Show
 
-data Tipo = Agua | Fuego | Planta 
+data TipoDePokemon = Agua | Fuego | Planta 
     deriving Show
 
-data Entrenador = String | Pokemon 
+data Entrenador = E String Pokemon Pokemon 
     deriving Show
     
 superaA :: Pokemon -> Pokemon -> Bool
 superaA poke1 poke2 = tipoSuperaA (tipo poke1) (tipo poke2)
 
-tipoSuperaA :: Tipo -> Tipo -> Bool
+tipoSuperaA :: TipoDePokemon -> TipoDePokemon -> Bool
 tipoSuperaA Agua Fuego = True
 tipoSuperaA Fuego Planta = True
 tipoSuperaA Planta Agua = True
 tipoSuperaA _ _ = False
 
-tipo :: Pokemon -> Tipo
+tipo :: Pokemon -> TipoDePokemon
 tipo (Poke t _) = t
 
+-- Pokemones
 snorlax = Poke Agua 100
+cacto = Poke Agua 150
 squirtle = Poke Fuego 200
+
+-- Entrenadores
+buchu = E "Buchu" snorlax cacto
+cacho = E "Cacho" squirtle snorlax
+
+cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
+cantidadDePokemonDe t (E _ poke1 poke2) = (unoSiOCeroSiNo (sonDelMismoTipo t (tipo poke1))) + (unoSiOCeroSiNo (sonDelMismoTipo t (tipo poke2)))
+
+sonDelMismoTipo :: TipoDePokemon -> TipoDePokemon -> Bool
+sonDelMismoTipo Agua Agua = True
+sonDelMismoTipo Fuego Fuego = True
+sonDelMismoTipo Planta Planta = True
+sonDelMismoTipo _ _ = False
+
+unoSiOCeroSiNo :: Bool -> Int
+unoSiOCeroSiNo True = 1
+unoSiOCeroSiNo False = 0
+
+juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
+juntarPokemon (e1, e2) = listaDePokemones e1 ++ listaDePokemones e2
+
+listaDePokemones :: Entrenador -> [Pokemon]
+listaDePokemones (E _ poke1 poke2) = poke1:poke2:[]
