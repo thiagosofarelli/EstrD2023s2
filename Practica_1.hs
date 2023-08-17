@@ -133,19 +133,19 @@ negar False = True
 -- b 
 
 implica :: Bool -> Bool -> Bool
-implica True False = False
+implica True b = b
 implica _ _ = True
 
 -- c
 
 yTambien :: Bool -> Bool -> Bool
-yTambien True True = True
+yTambien True b = b
 yTambien _ _ = False
 
 -- d
 
 oBien :: Bool -> Bool -> Bool
-oBien False False = False
+oBien False b = b
 oBien _ _ = True
 
 -- Ejercicio 4.1
@@ -180,4 +180,8 @@ laQueEsMayor (P n1 e1) (P n2 e2) = if (e1 > e2)
 
 thiago = P "Thiago" 20
 valentina = P "Valentina" 19
+
+
+
+
 
