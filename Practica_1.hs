@@ -176,12 +176,33 @@ laQueEsMayor :: Persona -> Persona -> Persona
 laQueEsMayor (P n1 e1) (P n2 e2) = if (e1 > e2)
                                      then P n1 e1
                                      else P n2 e2
-                            
-
+                                     
 thiago = P "Thiago" 20
 valentina = P "Valentina" 19
 
+-- Ejercicio 4.2
 
+data Pokemon = Poke Tipo Int   
+              -- Tipo Energia   
+     deriving Show
 
+data Tipo = Agua | Fuego | Planta 
+    deriving Show
 
+data Entrenador = String | Pokemon 
+    deriving Show
+    
+superaA :: Pokemon -> Pokemon -> Bool
+superaA poke1 poke2 = tipoSuperaA (tipo poke1) (tipo poke2)
 
+tipoSuperaA :: Tipo -> Tipo -> Bool
+tipoSuperaA Agua Fuego = True
+tipoSuperaA Fuego Planta = True
+tipoSuperaA Planta Agua = True
+tipoSuperaA _ _ = False
+
+tipo :: Pokemon -> Tipo
+tipo (Poke t _) = t
+
+snorlax = Poke Agua 100
+squirtle = Poke Fuego 200
