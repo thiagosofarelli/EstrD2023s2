@@ -176,9 +176,9 @@ esMayorQueLaOtra (P _ e1) (P _ e2) = e1 > e2
                                      
 
 laQueEsMayor :: Persona -> Persona -> Persona
-laQueEsMayor (P n1 e1) (P n2 e2) = if (e1 > e2)
-                                     then P n1 e1
-                                     else P n2 e2
+laQueEsMayor p1 p2  = if (esMayorQueLaOtra p1 p2)
+                    then p1
+                    else p2
 
 -- Personas                               
 thiago = P "Thiago" 20
