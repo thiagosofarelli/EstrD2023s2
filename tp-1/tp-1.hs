@@ -70,7 +70,6 @@ siguiente :: Dir -> Dir
 siguiente Norte = Este
 siguiente Este = Sur
 siguiente Sur = Oeste
-siguiente Oeste = Norte
 
 -- Si se supone que no existe la siguiente dirección a Oeste,
 -- la función sería parcial ya que no funcionaría con todas las
