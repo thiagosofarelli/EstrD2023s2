@@ -218,7 +218,7 @@ buchu = E "Buchu" snorlax cacto
 cacho = E "Cacho" squirtle snorlax
 
 cantidadDePokemonDe :: TipoDePokemon -> Entrenador -> Int
-cantidadDePokemonDe t (E _ poke1 poke2) = (unoSiOCeroSiNo (sonDelMismoTipo t (tipo poke1))) + (unoSiOCeroSiNo (sonDelMismoTipo t (tipo poke2)))
+cantidadDePokemonDe t (E _ poke1 poke2) = unoSiOCeroSiNo (sonDelMismoTipo t (tipo poke1)) + unoSiOCeroSiNo (sonDelMismoTipo t (tipo poke2))
 
 sonDelMismoTipo :: TipoDePokemon -> TipoDePokemon -> Bool
 sonDelMismoTipo Agua Agua = True
