@@ -14,6 +14,7 @@ sumar x y = x + y
 
 -- c
 
+-- Precondición: "y" no puede ser igual a cero.
 divisionYResto :: Int -> Int -> (Int, Int)
 divisionYResto x y = (div x y, mod x y)
 
@@ -264,18 +265,21 @@ estaVacia _ = False
 
 -- 3
 
+-- Precondición: La lista debe contener al menos un elemento.
 elPrimero :: [a] -> a
 elPrimero (a:_) = a
 elPrimero _ = error "La lista no contiene ningún elemento"
 
 -- 4 
 
+-- Precondición: La lista debe contener al menos un elemento.
 sinElPrimero :: [a] -> [a]
 sinElPrimero (_:a) = a
 sinElPrimero _ = error "La lista no contiene ningún elemento"
 
 -- 5
 
+-- Precondición: La lista debe contener al menos un elemento.
 splitHead :: [a] -> (a, [a])
 splitHead a = ((elPrimero a), (sinElPrimero a))
 splitHead _ = error "La lista no contiene ningún elemento"
