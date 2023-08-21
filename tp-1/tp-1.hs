@@ -228,7 +228,7 @@ sonDelMismoTipo _ _ = False
 
 unoSiOCeroSiNo :: Bool -> Int
 unoSiOCeroSiNo True = 1
-unoSiOCeroSiNo False = 0
+unoSiOCeroSiNo _ = 0
 
 juntarPokemon :: (Entrenador, Entrenador) -> [Pokemon]
 juntarPokemon (e1, e2) = listaDePokemones e1 ++ listaDePokemones e2
