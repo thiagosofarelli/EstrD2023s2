@@ -132,7 +132,7 @@ estaEnElMedio _ = False
 
 negar :: Bool -> Bool
 negar True = False
-negar False = True
+negar _ = True
 
 -- b 
 
