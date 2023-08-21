@@ -102,14 +102,19 @@ empiezaConM _ = False
 -- c
 
 vieneDespues :: DiaDeSemana -> DiaDeSemana -> Bool
-vieneDespues Martes Lunes = True
-vieneDespues Miercoles Martes = True
-vieneDespues Jueves Miercoles = True
-vieneDespues Viernes Jueves = True
-vieneDespues Sabado Viernes = True
-vieneDespues Domingo Sabado = True
-vieneDespues Lunes Domingo = True
-vieneDespues _ _ = False 
+vieneDespues d1 d2 = diaANumero d1 > diaANumero d2 
+
+diaANumero :: DiaDeSemana -> Int
+diaANumero Lunes     = 1
+diaANumero Martes    = 2
+diaANumero Miercoles = 3
+diaANumero Jueves    = 4
+diaANumero Viernes   = 5
+diaANumero Sabado    = 6
+diaANumero Domingo   = 7
+
+
+
 
 -- d
 
