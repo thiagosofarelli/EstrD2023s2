@@ -65,13 +65,17 @@ apariciones e (x:xs) = (if e == x then 1 else 0) + apariciones e xs
 
 losMenoresA :: Int -> [Int] -> [Int]
 losMenoresA _ [] = []
-losMenoresA n (x:xs) = (if n > x then x : losMenoresA n xs else losMenoresA n xs)
+losMenoresA n (x:xs) = if n > x 
+                       then x : losMenoresA n xs 
+                       else losMenoresA n xs
 
 -- 10
 
 lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
 lasDeLongitudMayorA _ [] = []
-lasDeLongitudMayorA n (l:ls) = (if (longitud l) > n then l : lasDeLongitudMayorA  n ls else lasDeLongitudMayorA n ls)
+lasDeLongitudMayorA n (l:ls) = if (longitud l) > n 
+                               then l : lasDeLongitudMayorA  n ls 
+                               else lasDeLongitudMayorA n ls
 
 -- 11
 
@@ -97,13 +101,14 @@ zipMaximos :: [Int] -> [Int] -> [Int]
 zipMaximos [] [] = []
 zipMaximos [] ys = ys
 zipMaximos xs [] = xs
-zipMaximos (x:xs) (y:ys) = if x > y then x : zipMaximos xs ys else y : zipMaximos xs ys 
+zipMaximos (x:xs) (y:ys) = max x y : zipMaximos xs ys 
+
 
 -- 15
 
 elMinimo :: Ord a => [a] -> a
 elMinimo [e] = e
-elMinimo (x:xs) = if x < elMinimo xs then x else elMinimo xs
+elMinimo (x:xs) = min x (elMinimo xs)
 
 -- Ejercicio 2
 
@@ -138,3 +143,36 @@ mayoresA _ [] = []
 mayoresA n (p:ps) = if n < edad p then p : mayoresA n ps else mayoresA n ps
 
 
+-- Ejercicios dados en la clase 2 (video)
+
+hayAlMenosUnCinco :: [Int] -> Bool
+hayAlMenosUnCinco [] = False
+hayAlMenosUnCinco (n:ns) = n == 5 || hayAlMenosUnCinco ns
+
+hayAlMenosUn :: Int -> [Int] -> Bool
+hayAlMenosUn _ [] = False
+hayAlMenosUn x (n:ns) = n == x || hayAlMenosUn x ns
+
+soloLosMayoresQue :: Int -> [Int] -> [Int]
+soloLosMayoresQue _ [] = []
+soloLosMayoresQue x (n:ns)  = if n > x 
+                              then n : soloLosMayoresQue x ns 
+                              else soloLosMayoresQue x ns
+
+data Dir = Norte | Sur | Este | Oeste
+
+iniciales :: [Dir] -> [Char]
+iniciales [] = []
+iniciales (d:ds) = inicial d : iniciales ds
+
+inicial :: Dir -> Char
+inicial Norte = 'N'
+inicial Sur   = 'S'
+inicial Este  = 'E'
+inicial Oeste = 'O'
+
+miZip :: [a] -> [b] -> [(a,b)]
+-- zip [10, 20, 30] ['N','S'] = [(10, 'N'), (20, 'S')]
+miZip []      _     = []
+miZip (x:xs) []     = []
+miZip (x:xs) (y:ys) = (x, y) : miZip xs ys
