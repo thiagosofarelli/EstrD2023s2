@@ -172,9 +172,8 @@ cambioDeNombre :: String -> Persona -> Persona
 cambioDeNombre nuevoNombre (P n e) = P nuevoNombre e
 
 esMayorQueLaOtra :: Persona -> Persona -> Bool
-esMayorQueLaOtra (P _ e1) (P _ e2) = if (e1 > e2)
-                                     then True
-                                     else False
+esMayorQueLaOtra (P _ e1) (P _ e2) = e1 > e2
+                                     
 
 laQueEsMayor :: Persona -> Persona -> Persona
 laQueEsMayor (P n1 e1) (P n2 e2) = if (e1 > e2)
