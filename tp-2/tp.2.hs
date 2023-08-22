@@ -28,25 +28,25 @@ longitud (x:xs)    = 1 + longitud xs
 -- 3
 
 sucesores :: [Int] -> [Int]
-sucesores [] = []
+sucesores     [] = []
 sucesores (n:ns) = n + 1 : sucesores ns
 
 -- 4 
 
 conjuncion :: [Bool] -> Bool
-conjuncion [] = False
+conjuncion     [] = False
 conjuncion (b:bs) = b && conjuncion bs
 
 -- 5 
 
 disyuncion :: [Bool] -> Bool
-disyuncion [] = False
+disyuncion     [] = False
 disyuncion (b:bs) = b || disyuncion bs
 
 -- 6
 
 aplanar :: [[a]] -> [a]
-aplanar [] = []
+aplanar     [] = []
 aplanar (x:xs) = x ++ aplanar xs
 
 -- 7 
@@ -58,13 +58,13 @@ pertenece e (x:xs) = e == x || pertenece e xs
 -- 8
 
 apariciones :: Eq a => a -> [a] -> Int
-apariciones _ [] = 0
+apariciones     _ [] = 0
 apariciones e (x:xs) = (if e == x then 1 else 0) + apariciones e xs
                        
 -- 9
 
 losMenoresA :: Int -> [Int] -> [Int]
-losMenoresA _ [] = []
+losMenoresA     _ [] = []
 losMenoresA n (x:xs) = if n > x 
                        then x : losMenoresA n xs 
                        else losMenoresA n xs
@@ -72,7 +72,7 @@ losMenoresA n (x:xs) = if n > x
 -- 10
 
 lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
-lasDeLongitudMayorA _ [] = []
+lasDeLongitudMayorA     _ [] = []
 lasDeLongitudMayorA n (l:ls) = if (longitud l) > n 
                                then l : lasDeLongitudMayorA  n ls 
                                else lasDeLongitudMayorA n ls
@@ -80,7 +80,7 @@ lasDeLongitudMayorA n (l:ls) = if (longitud l) > n
 -- 11
 
 agregarAlFinal :: [a] -> a -> [a]
-agregarAlFinal [] e = [e]
+agregarAlFinal     [] e = [e]
 agregarAlFinal (x:xs) e = x : agregarAlFinal xs e
 
 -- 12 
@@ -92,32 +92,38 @@ agregar (x:xs) ys = x : agregar xs ys
 -- 13
 
 reversa :: [a] -> [a]
-reversa [] = []
+reversa     [] = []
 reversa (x:xs) = reversa xs ++ [x]
 
 -- 14
 
 zipMaximos :: [Int] -> [Int] -> [Int]
-zipMaximos [] [] = []
-zipMaximos [] ys = ys
-zipMaximos xs [] = xs
+zipMaximos         [] [] = []
+zipMaximos         [] ys = ys
+zipMaximos         xs [] = xs
 zipMaximos (x:xs) (y:ys) = max x y : zipMaximos xs ys 
 
 
 -- 15
 
 elMinimo :: Ord a => [a] -> a
-elMinimo [e] = e
+elMinimo    [e] = e
 elMinimo (x:xs) = min x (elMinimo xs)
 
 -- Ejercicio 2
 
 -- 1
 
+factorial :: Int -> Int -- Precondición: n no es negativo.
+factorial 0 = 1
+factorial n = n * factorial (n-1)
+
+
+
 -- 2
 
 -- 3
-
+ 
 -- 4
 
 -- 5
@@ -174,5 +180,30 @@ inicial Oeste = 'O'
 miZip :: [a] -> [b] -> [(a,b)]
 -- zip [10, 20, 30] ['N','S'] = [(10, 'N'), (20, 'S')]
 miZip []      _     = []
-miZip (x:xs) []     = []
+miZip  _     []     = []
 miZip (x:xs) (y:ys) = (x, y) : miZip xs ys
+
+miLast :: [a] -> a -- Precondición: La lista no es vacía
+miLast (x:xs) = if null xs
+                then x
+                else miLast xs
+
+promedio :: [Int] -> Int -- Precondición: La lista no es vacía
+promedio ns = div (sumatoria ns) (longitud ns)
+
+miSumatoria :: Int -> Int
+miSumatoria 0 = 0
+miSumatoria n = n + miSumatoria (n-1)
+
+replicar :: Int -> a -> [a] -- Precondición: El número es mayor o igual que cero.
+replicar 0 x = []
+replicar n x = x : replicar (n-1) x 
+
+cuentaRegresivaDesde :: Int -> [Int]
+cuentaRegresivaDesde 0 = [0]
+cuentaRegresivaDesde n = n : cuentaRegresivaDesde (n-1)
+
+losPrimerosN :: Int -> [Int] -> [Int]
+losPrimerosN 0 _  = []
+losPrimerosN n [] = []
+losPrimerosN n (x:xs) = x : losPrimerosN (n-1) xs
