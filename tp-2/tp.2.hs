@@ -118,15 +118,28 @@ factorial :: Int -> Int -- Precondición: n no es negativo.
 factorial 0 = 1
 factorial n = n * factorial (n-1)
 
-
-
 -- 2
 
+cuentaRegresiva :: Int -> [Int] -- Precondición: n no es negativo.
+cuentaRegresiva 0 = [0]
+cuentaRegresiva n = n : cuentaRegresiva (n-1)
+
 -- 3
- 
+repetir :: Int -> a -> [a]
+repetir 0 _ = []
+repetir n x = x : repetir (n-1) x
+
 -- 4
+losPrimeros :: Int -> [a] -> [a]
+losPrimeros 0 _      = []
+losPrimeros n []     = []
+losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
 
 -- 5
+sinLosPrimeros :: Int -> [a] -> [a]
+sinLosPrimeros 0 xs  = xs
+sinLosPrimeros n [] = []
+sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs
 
 
 -- Ejercicio 3
