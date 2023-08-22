@@ -153,6 +153,8 @@ data Persona = P String Int
 thiago = P "Thiago" 20
 valentina = P "Valentina" 19
 coco = P "Coco" 3
+carlos = P "Carlos" 20
+barrio = [thiago, valentina, coco]
 
 edad :: Persona -> Int
 edad (P _ e) = e
@@ -160,6 +162,74 @@ edad (P _ e) = e
 mayoresA :: Int -> [Persona] -> [Persona]
 mayoresA _ [] = []
 mayoresA n (p:ps) = if n < edad p then p : mayoresA n ps else mayoresA n ps
+
+promedioEdad :: [Persona] -> Int -- Precondición: La lista posee al menos una persona.
+promedioEdad ps = promedio (edades ps)
+
+edades :: [Persona] -> [Int]
+edades [] = []
+edades (p:ps) = edad p : edades ps
+
+elMasViejo :: [Persona] -> Persona -- Precondición: La lista posee al menos una persona.
+elMasViejo [p] = p
+elMasViejo (p:ps) = if edad p == numeroMaximo (edades (p:ps))
+                    then p
+                    else elMasViejo ps 
+
+numeroMaximo :: [Int] -> Int
+numeroMaximo [] = 0
+numeroMaximo (n:ns) = max n (numeroMaximo ns)
+
+-- 2
+
+data TipoDePokemon = Agua | Fuego | Planta
+data Pokemon = ConsPokemon TipoDePokemon Int
+data Entrenador = ConsEntrenador String [Pokemon]
+
+-- Pokemones
+snorlax = ConsPokemon Agua 100
+cacto = ConsPokemon Agua 150
+squirtle = ConsPokemon Fuego 200
+
+-- Entrenadores
+buchu = ConsEntrenador "Buchu" [snorlax, cacto, squirtle]
+cacho = ConsEntrenador "Cacho" [snorlax, cacto]
+
+cantPokemon :: Entrenador -> Int
+--Devuelve la cantidad de Pokémon que posee el entrenador.
+cantPokemon e = longitud (listaDePokemones e)
+
+listaDePokemones :: Entrenador -> [Pokemon]
+listaDePokemones (ConsEntrenador _ p) = p
+
+
+cantPokemonDe :: TipoDePokemon -> Entrenador -> Int
+--Devuelve la cantidad de Pokémon de determinado tipo que posee el entrenador.
+cantPokemonDe tipo e = longitud (pokemonesDeTipoDe tipo (listaDePokemones e))
+
+pokemonesDeTipoDe :: TipoDePokemon -> [Pokemon] -> [Pokemon]
+pokemonesDeTipoDe _ [] = []
+pokemonesDeTipoDe t (p:ps) = if sonDelMismoTipo t (tipo p) 
+                             then p : pokemonesDeTipoDe t ps
+                             else pokemonesDeTipoDe t ps
+
+tipo :: Pokemon -> TipoDePokemon
+tipo (ConsPokemon t _) = t
+
+sonDelMismoTipo :: TipoDePokemon -> TipoDePokemon -> Bool
+sonDelMismoTipo Agua Agua = True
+sonDelMismoTipo Fuego Fuego = True
+sonDelMismoTipo Planta Planta = True
+sonDelMismoTipo _ _ = False
+
+
+--cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
+--Dados dos entrenadores, indica la cantidad de Pokemon de cierto tipo, que le ganarían
+--a los Pokemon del segundo entrenador.
+
+
+--esMaestroPokemon :: Entrenador -> Bool
+--Dado un entrenador, devuelve True si posee al menos un Pokémon de cada tipo posible.
 
 
 -- Ejercicios dados en la clase 2 (video)
