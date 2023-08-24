@@ -330,7 +330,7 @@ sonElMismoProyecto p1 p2 = nombreDeProyecto p1 == nombreDeProyecto p2
 losDevSenior :: Empresa -> [Proyecto] -> Int
 --Dada una empresa indica la cantidad de desarrolladores senior que posee, que pertecen
 --además a los proyectos dados por parámetro.
-losDevSenior emp (p:ps) = longitud (devsSeniorsDe_En_ (seniorsDe (rolesDe emp)) ps)
+losDevSenior emp ps = devsSeniorsDe_En_ (seniorsDe (rolesDe emp)) ps
 
 seniorsDe :: [Rol] -> [Rol]
 seniorsDe [] = []
@@ -338,18 +338,11 @@ seniorsDe (d:ds) = if esIgualSeniority (seniority d) Senior
                    then d : seniorsDe ds
                    else seniorsDe ds
 
-devsSeniorsDe_En_ :: [Rol] -> [Proyecto] -> [Rol]
-devsSeniorsDe_En_ _ [] = []
-devsSeniorsDe_En_ (d:ds) (p:ps) = if (participaEnAlgunProyectoDe_ d ps)
-                                  then d : devsSeniorsDe_En_ ds ps
+devsSeniorsDe_En_ :: [Rol] -> [Proyecto] -> Int
+devsSeniorsDe_En_ [] _ = 0
+devsSeniorsDe_En_ (d:ds) ps = if (hayProyecto_En_ (proyectoDe d) ps && esIgualSeniority Senior (seniority d))
+                                  then 1 + devsSeniorsDe_En_ ds ps
                                   else devsSeniorsDe_En_ ds ps
-
-participaEnAlgunProyectoDe_ :: Rol -> [Proyecto] -> Bool
-participaEnAlgunProyectoDe_ _ [] = False
-participaEnAlgunProyectoDe_ r (p:ps) = participaEn r p || participaEnAlgunProyectoDe_ r ps
-
-participaEn :: Rol -> Proyecto -> Bool
-participaEn r p = sonElMismoProyecto (proyectoDe r) p 
 
 esIgualSeniority :: Seniority -> Seniority -> Bool
 esIgualSeniority Junior Junior = True
