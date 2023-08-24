@@ -338,7 +338,7 @@ seniorsDe (d:ds) = if esIgualSeniority (seniority d) Senior
                    then d : seniorsDe ds
                    else seniorsDe ds
 
-devsSeniorsDe_En_ :: [Rol] -> [Proyecto] -> Int
+devsSeniorsDe_En_ :: [Rol] -> [Proyecto] -> [Rol]
 devsSeniorsDe_En_ [] _ = 0
 devsSeniorsDe_En_ (d:ds) ps = if (hayProyecto_En_ (proyectoDe d) ps && esIgualSeniority Senior (seniority d))
                                   then d : devsSeniorsDe_En_ ds ps
