@@ -330,7 +330,7 @@ sonElMismoProyecto p1 p2 = nombreDeProyecto p1 == nombreDeProyecto p2
 losDevSenior :: Empresa -> [Proyecto] -> Int
 --Dada una empresa indica la cantidad de desarrolladores senior que posee, que pertecen
 --además a los proyectos dados por parámetro.
-losDevSenior emp ps = devsSeniorsDe_En_ (seniorsDe (rolesDe emp)) ps
+losDevSenior emp ps = longitud (devsSeniorsDe_En_ (seniorsDe (rolesDe emp)) ps)
 
 seniorsDe :: [Rol] -> [Rol]
 seniorsDe [] = []
@@ -341,7 +341,7 @@ seniorsDe (d:ds) = if esIgualSeniority (seniority d) Senior
 devsSeniorsDe_En_ :: [Rol] -> [Proyecto] -> Int
 devsSeniorsDe_En_ [] _ = 0
 devsSeniorsDe_En_ (d:ds) ps = if (hayProyecto_En_ (proyectoDe d) ps && esIgualSeniority Senior (seniority d))
-                                  then 1 + devsSeniorsDe_En_ ds ps
+                                  then d : devsSeniorsDe_En_ ds ps
                                   else devsSeniorsDe_En_ ds ps
 
 esIgualSeniority :: Seniority -> Seniority -> Bool
