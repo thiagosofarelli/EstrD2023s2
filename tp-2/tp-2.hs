@@ -183,17 +183,24 @@ numeroMaximo (n:ns) = max n (numeroMaximo ns)
 -- 2
 
 data TipoDePokemon = Agua | Fuego | Planta
+    deriving Show
+    
 data Pokemon = ConsPokemon TipoDePokemon Int
+    deriving Show
+
 data Entrenador = ConsEntrenador String [Pokemon]
+    deriving Show
 
 -- Pokemones
 snorlax = ConsPokemon Agua 100
 cacto = ConsPokemon Agua 150
 squirtle = ConsPokemon Fuego 200
+cucu = ConsPokemon Planta 120
+kiki = ConsPokemon Agua 300
 
 -- Entrenadores
-buchu = ConsEntrenador "Buchu" [snorlax, cacto, squirtle]
-cacho = ConsEntrenador "Cacho" [snorlax, cacto]
+buchu = ConsEntrenador "Buchu" [squirtle, kiki]
+cacho = ConsEntrenador "Cacho" [snorlax, cacto, cucu, kiki, squirtle]
 
 cantPokemon :: Entrenador -> Int
 --Devuelve la cantidad de Pokémon que posee el entrenador.
@@ -222,11 +229,40 @@ sonDelMismoTipo Fuego Fuego = True
 sonDelMismoTipo Planta Planta = True
 sonDelMismoTipo _ _ = False
 
-
---cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int
+cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int 
 --Dados dos entrenadores, indica la cantidad de Pokemon de cierto tipo, que le ganarían
 --a los Pokemon del segundo entrenador.
+cuantosDeTipo_De_LeGananATodosLosDe_ tipo e1 e2 = cantidadDeVictoriasDe_FrenteA (pokemonesDeTipoDe tipo (listaDePokemones e1)) (listaDePokemones e2)
 
+cantidadDeVictoriasDe_FrenteA :: [Pokemon] -> [Pokemon] -> Int
+cantidadDeVictoriasDe_FrenteA [] _ = 0
+cantidadDeVictoriasDe_FrenteA (x:xs) (y:ys) = pokemonesVencidosPor_FrenteA_ x ys + cantidadDeVictoriasDe_FrenteA xs ys
+
+pokemonesVencidosPor_FrenteA_ :: Pokemon -> [Pokemon] -> Int
+pokemonesVencidosPor_FrenteA_ _ [] = 0
+pokemonesVencidosPor_FrenteA_ x (y:ys) = unoSiOCeroSiNo (pokemonSuperaA x y) + pokemonesVencidosPor_FrenteA_ x ys
+
+pokemonSuperaA :: Pokemon -> Pokemon -> Bool
+pokemonSuperaA p1 p2 = tipoSuperaA (tipo p1) (tipo p2)
+
+tipoSuperaA :: TipoDePokemon -> TipoDePokemon -> Bool 
+tipoSuperaA Agua Fuego = True 
+tipoSuperaA Fuego Planta = True 
+tipoSuperaA Planta Agua = True 
+tipoSuperaA _ _ = False
+
+unoSiOCeroSiNo :: Bool -> Int 
+unoSiOCeroSiNo True = 1 
+unoSiOCeroSiNo _ = 0
+
+-- Pokemones
+--snorlax = ConsPokemon Agua 100
+--cacto = ConsPokemon Agua 150
+--squirtle = ConsPokemon Fuego 200
+
+-- Entrenadores
+--buchu = ConsEntrenador "Buchu" [snorlax, cacto, squirtle]
+--cacho = ConsEntrenador "Cacho" [snorlax, cacto]
 
 --esMaestroPokemon :: Entrenador -> Bool
 --Dado un entrenador, devuelve True si posee al menos un Pokémon de cada tipo posible.
