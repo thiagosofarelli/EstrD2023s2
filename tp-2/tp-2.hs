@@ -330,7 +330,7 @@ sonElMismoProyecto p1 p2 = nombreDeProyecto p1 == nombreDeProyecto p2
 losDevSenior :: Empresa -> [Proyecto] -> Int
 --Dada una empresa indica la cantidad de desarrolladores senior que posee, que pertecen
 --además a los proyectos dados por parámetro.
-losDevSenior emp ps = longitud (devsSeniorsDe_En_ (seniorsDe (rolesDe emp)) ps)
+losDevSenior emp ps = longitud (devsSeniorsDe_En_ (rolesDe emp) ps)
 
 seniorsDe :: [Rol] -> [Rol]
 seniorsDe [] = []
@@ -339,7 +339,7 @@ seniorsDe (d:ds) = if esIgualSeniority (seniority d) Senior
                    else seniorsDe ds
 
 devsSeniorsDe_En_ :: [Rol] -> [Proyecto] -> [Rol]
-devsSeniorsDe_En_ [] _ = 0
+devsSeniorsDe_En_ [] _ = []
 devsSeniorsDe_En_ (d:ds) ps = if (hayProyecto_En_ (proyectoDe d) ps && esIgualSeniority Senior (seniority d))
                                   then d : devsSeniorsDe_En_ ds ps
                                   else devsSeniorsDe_En_ ds ps
@@ -354,12 +354,16 @@ seniority :: Rol -> Seniority
 seniority (Developer s _) = s
 seniority (Management s _) = s
 
-
-
-
-
---cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
+cantQueTrabajanEn :: [Proyecto] -> Empresa -> Int
 --Indica la cantidad de empleados que trabajan en alguno de los proyectos dados.
+cantQueTrabajanEn [] _ = 0
+cantQueTrabajanEn xs emp = longitud (empleadosDe_QueTrabajanEn_ (rolesDe emp) xs)
+
+empleadosDe_QueTrabajanEn_ :: [Rol] -> [Proyecto] -> [Rol]
+empleadosDe_QueTrabajanEn_ [] _ = []
+empleadosDe_QueTrabajanEn_ (x:xs) ys = if hayProyecto_En_ (proyectoDe x) ys
+                                       then x : empleadosDe_QueTrabajanEn_ xs ys
+                                       else empleadosDe_QueTrabajanEn_ xs ys
 
 --asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
 --Devuelve una lista de pares que representa a los proyectos (sin repetir) junto con su
