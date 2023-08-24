@@ -364,10 +364,20 @@ empleadosDe_QueTrabajanEn_ [] _ = []
 empleadosDe_QueTrabajanEn_ (x:xs) ys = if hayProyecto_En_ (proyectoDe x) ys
                                        then x : empleadosDe_QueTrabajanEn_ xs ys
                                        else empleadosDe_QueTrabajanEn_ xs ys
-
---asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
+asignadosPorProyecto :: Empresa -> [(Proyecto, Int)]
 --Devuelve una lista de pares que representa a los proyectos (sin repetir) junto con su
 --cantidad de personas involucradas.
+asignadosPorProyecto emp = asignadosPorProyectoR (rolesDe emp)
+
+asignadosPorProyectoR :: [Rol] -> [(Proyecto, Int)]
+asignadosPorProyectoR [] = []
+asignadosPorProyectoR (r:rs) = registrarProyecto r (asignadosPorProyectoR rs)
+
+registrarProyecto :: Rol -> [(Proyecto, Int)] -> [(Proyecto, Int)]
+registrarProyecto r [] = [(proyectoDe r, 1)]
+registrarProyecto r (d:ds) = if sonElMismoProyecto (proyectoDe r) (fst d)
+                             then (fst d, (snd d) + 1) : ds
+                             else d : registrarProyecto r ds
 
 -- Ejercicios dados en la clase 2 (video)
 
