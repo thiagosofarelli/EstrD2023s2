@@ -25,7 +25,14 @@ nroBolitas c (Bolita col cel) = unoSiOCeroSiNo (sonElMismoColor c col) + nroBoli
 poner :: Color -> Celda -> Celda
 poner col cel = Bolita col cel
 
+sacar :: Color -> Celda -> Celda
+sacar _ CeldaVacia = CeldaVacia
+sacar c (Bolita col cel) = if sonElMismoColor c col     
+                           then cel
+                           else (Bolita col (sacar c cel)) 
+
 celda0 = Bolita Rojo (Bolita Azul (Bolita Rojo (Bolita Azul CeldaVacia)))
+celda1 = Bolita Azul (Bolita Azul CeldaVacia)
 
 sonElMismoColor :: Color -> Color -> Bool
 sonElMismoColor Azul Azul = True
