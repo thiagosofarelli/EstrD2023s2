@@ -60,7 +60,7 @@ hayTesoro Fin = False
 hayTesoro (Nada cam) = hayTesoro cam
 hayTesoro (Cofre objetos cam) = hayTesoroEn' objetos || hayTesoro cam
 
-camino1 = Cofre [Cacharro] (Cofre [Cacharro] (Cofre [Cacharro, Tesoro] Fin))
+camino1 = Cofre [Tesoro] (Cofre [Cacharro] (Cofre [Cacharro, Tesoro] Fin))
 
 hayTesoroEn' :: [Objeto] -> Bool
 hayTesoroEn' [] = False
@@ -83,4 +83,28 @@ pasosHastaTesoro (Cofre objetos cam) = if hayTesoroEn' objetos
 hayTesoroEn :: Int -> Camino -> Bool
 --Indica si hay un tesoro en una cierta cantidad exacta de pasos. Por ejemplo, si el número de
 --pasos es 5, indica si hay un tesoro en 5 pasos.
-hayTesoroEn n cam = pasosHastaTesoro cam == n       
+hayTesoroEn n cam = pasosHastaTesoro cam == n  
+
+alMenosNTesoros :: Int -> Camino -> Bool
+--Indica si hay al menos "n" tesoros en el camino.
+alMenosNTesoros n cam = n <= cantTesorosEn cam
+
+cantTesorosEn :: Camino -> Int
+cantTesorosEn Fin = 0
+cantTesorosEn (Nada cam) = 0 + cantTesorosEn cam
+cantTesorosEn (Cofre objetos cam) = cantTesorosEnObj objetos + cantTesorosEn cam
+
+cantTesorosEnObj :: [Objeto] -> Int
+cantTesorosEnObj [] = 0
+cantTesorosEnObj (o:os) = unoSiOCeroSiNo (esTesoro o) + cantTesorosEnObj os
+
+cantTesorosEntre :: Int -> Int -> Camino -> Int
+--Dado un rango de pasos, indica la cantidad de tesoros que hay en ese rango. Por ejemplo, si
+--el rango es 3 y 5, indica la cantidad de tesoros que hay entre hacer 3 pasos y hacer 5. Están
+--incluidos tanto 3 como 5 en el resultado.
+cantTesorosEntre _ _ Fin = 0 
+cantTesorosEntre pasos1 pasos2 (Nada cam) = cantTesorosEntre (pasos1 - 1) (pasos2 - 1) cam
+cantTesorosEntre pasos1 pasos2 (Cofre objetos cam) = if pasos1 <= 0 && pasos2 >= 0
+                                                     then cantTesorosEnObj objetos + cantTesorosEntre (pasos1 - 1) (pasos2 - 1) cam
+                                                     else cantTesorosEntre (pasos1 - 1) (pasos2 -1) cam
+
