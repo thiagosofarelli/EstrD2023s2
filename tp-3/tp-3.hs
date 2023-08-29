@@ -108,3 +108,38 @@ cantTesorosEntre pasos1 pasos2 (Cofre objetos cam) = if pasos1 <= 0 && pasos2 >=
                                                      then cantTesorosEnObj objetos + cantTesorosEntre (pasos1 - 1) (pasos2 - 1) cam
                                                      else cantTesorosEntre (pasos1 - 1) (pasos2 -1) cam
 
+-- Ejercicio 2. Tipos Arbóreos
+
+data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+    deriving Show
+
+arbol1 :: Tree Int
+arbol1 = NodeT 10
+            (NodeT 4 
+                (NodeT 2 EmptyT EmptyT) 
+                (NodeT 5 
+                    (NodeT 6 EmptyT EmptyT) EmptyT)) 
+            (NodeT 6 EmptyT EmptyT)
+
+arbol2 :: Tree Int
+arbol2 = EmptyT
+
+-- Ejercicio 2.1
+
+-- 1
+sumarT :: Tree Int -> Int
+--Dado un árbol binario de enteros devuelve la suma entre sus elementos.
+sumarT EmptyT = 0
+sumarT (NodeT n t1 t2) = n + sumarT t1 + sumarT t2
+
+sizeT :: Tree a -> Int
+--Dado un árbol binario devuelve su cantidad de elementos, es decir, el tamaño del árbol (size
+--en inglés).
+sizeT EmptyT = 0
+sizeT (NodeT n t1 t2) = 1 + sizeT t1 + sizeT t2
+
+mapDobleT :: Tree Int -> Tree Int
+--Dado un árbol de enteros devuelve un árbol con el doble de cada número
+mapDobleT EmptyT = EmptyT
+mapDobleT (NodeT n t1 t2) = NodeT (n*2) (mapDobleT t1) (mapDobleT t2)
+
