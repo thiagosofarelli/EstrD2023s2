@@ -107,8 +107,10 @@ zipMaximos (x:xs) (y:ys) = max x y : zipMaximos xs ys
 -- 15
 
 elMinimo :: Ord a => [a] -> a
-elMinimo    [e] = e
-elMinimo (x:xs) = min x (elMinimo xs)
+elMinimo    [] = error "No hay elementos"
+elMinimo (x:xs) = if null xs || (x < elMinimo xs)
+                  then x
+                  else elMinimo xs
 
 -- Ejercicio 2
 
