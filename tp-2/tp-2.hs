@@ -107,7 +107,7 @@ zipMaximos (x:xs) (y:ys) = max x y : zipMaximos xs ys
 -- 15
 
 elMinimo :: Ord a => [a] -> a
--- La lista contiene al menos un elemento.
+-- Precondición: La lista contiene al menos un elemento.
 elMinimo    [] = error "No hay elementos"
 elMinimo (x:xs) = if null xs || (x < elMinimo xs)
                   then x
