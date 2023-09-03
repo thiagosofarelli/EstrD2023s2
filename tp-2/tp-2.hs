@@ -73,7 +73,7 @@ losMenoresA n (x:xs) = if n > x
 
 lasDeLongitudMayorA :: Int -> [[a]] -> [[a]]
 lasDeLongitudMayorA     _ [] = []
-lasDeLongitudMayorA n (l:ls) = if (longitud l) > n 
+lasDeLongitudMayorA n (l:ls) = if longitud l > n 
                                then l : lasDeLongitudMayorA  n ls 
                                else lasDeLongitudMayorA n ls
 
