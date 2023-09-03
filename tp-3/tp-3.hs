@@ -1,7 +1,7 @@
 -- Tipos algebraicos -> Se definen a través de CONSTRUCTORES (formas 
 -- de hablar de los datos que yo puedo definir por mí mismo).
 -- Se acceden mediante PATTERN MATCHING.
--- Se clasifincan en:
+-- Se clasifican en:
 -- Enumerativos (ej: Dirección(varios constructores sin argumentos)).
 -- Registros (ej: Persona (único constructor - varios argumentos)).
 -- Sumas o Variantes (ej: Helado (varios constructores con argumentos)).
@@ -20,7 +20,7 @@ data Celda = Bolita Color Celda | CeldaVacia
 
 nroBolitas :: Color -> Celda -> Int
 nroBolitas _ CeldaVacia = 0
-nroBolitas c (Bolita col cel) = unoSiOCeroSiNo (sonElMismoColor c col) + nroBolitas c cel
+nroBolitas c (Bolita col cel) = unoSi (sonElMismoColor c col) + nroBolitas c cel
 
 poner :: Color -> Celda -> Celda
 poner col cel = Bolita col cel
@@ -43,9 +43,9 @@ sonElMismoColor Azul Azul = True
 sonElMismoColor Rojo Rojo = True
 sonElMismoColor _ _ = False
 
-unoSiOCeroSiNo :: Bool -> Int 
-unoSiOCeroSiNo True = 1 
-unoSiOCeroSiNo _ = 0
+unoSi :: Bool -> Int 
+unoSi True = 1 
+unoSi _ = 0
 
 data Objeto = Cacharro | Tesoro
     deriving Show
@@ -83,7 +83,14 @@ pasosHastaTesoro (Cofre objetos cam) = if hayTesoroEn' objetos
 hayTesoroEn :: Int -> Camino -> Bool
 --Indica si hay un tesoro en una cierta cantidad exacta de pasos. Por ejemplo, si el número de
 --pasos es 5, indica si hay un tesoro en 5 pasos.
-hayTesoroEn n cam = pasosHastaTesoro cam == n  
+hayTesoroEn 0 cam                    = hayTesoroAca cam
+hayTesoroEn n Fin                       = False
+hayTesoroEn n (Nada cam)             = hayTesoroEn (n-1) cam
+hayTesoroEn n (Cofre objeto cam)     = hayTesoroEn (n-1) cam
+
+hayTesoroAca :: Camino -> Bool
+hayTesoroAca (Cofre objetos cam) = hayTesoroEn' objetos
+hayTesoroAca _ = False
 
 alMenosNTesoros :: Int -> Camino -> Bool
 --Indica si hay al menos "n" tesoros en el camino.
@@ -96,7 +103,7 @@ cantTesorosEn (Cofre objetos cam) = cantTesorosEnObj objetos + cantTesorosEn cam
 
 cantTesorosEnObj :: [Objeto] -> Int
 cantTesorosEnObj [] = 0
-cantTesorosEnObj (o:os) = unoSiOCeroSiNo (esTesoro o) + cantTesorosEnObj os
+cantTesorosEnObj (o:os) = unoSi (esTesoro o) + cantTesorosEnObj os
 
 cantTesorosEntre :: Int -> Int -> Camino -> Int
 --Dado un rango de pasos, indica la cantidad de tesoros que hay en ese rango. Por ejemplo, si
@@ -126,7 +133,6 @@ arbol2 = EmptyT
 
 -- Ejercicio 2.1
 
--- 1
 sumarT :: Tree Int -> Int
 --Dado un árbol binario de enteros devuelve la suma entre sus elementos.
 sumarT EmptyT = 0
@@ -143,3 +149,41 @@ mapDobleT :: Tree Int -> Tree Int
 mapDobleT EmptyT = EmptyT
 mapDobleT (NodeT n t1 t2) = NodeT (n*2) (mapDobleT t1) (mapDobleT t2)
 
+perteneceT :: Eq a => a -> Tree a -> Bool
+--Dados un elemento y un árbol binario devuelve True si existe un elemento igual a ese en el
+--árbol.
+perteneceT _ EmptyT = False
+perteneceT x (NodeT n t1 t2) = x == n || perteneceT x t1 || perteneceT x t2
+
+aparicionesT :: Eq a => a -> Tree a -> Int
+--Dados un elemento e y un árbol binario devuelve la cantidad de elementos del árbol que son
+--iguales a e.
+aparicionesT _ EmptyT = 0
+aparicionesT e (NodeT n t1 t2) = unoSi (e == n) + aparicionesT e t1 + aparicionesT e t2
+
+leaves :: Tree a -> [a]
+--Dado un árbol devuelve los elementos que se encuentran en sus hojas
+leaves EmptyT = []
+leaves (NodeT a EmptyT EmptyT) = [a]
+leaves (NodeT a t1 t2) = (leaves t1) ++ (leaves t2)
+
+heightT :: Tree a -> Int
+--Dado un árbol devuelve su altura.
+--Nota: la altura de un árbol (height en inglés), también llamada profundidad, es la cantidad
+--de niveles del árbol1
+--La altura para EmptyT es 0, y para una hoja es 1
+heightT EmptyT = 0
+heightT (NodeT x t1 t2) = 1 + max (heightT t1) (heightT t2)
+
+mirrorT :: Tree a -> Tree a
+--Dado un árbol devuelve el árbol resultante de intercambiar el hijo izquierdo con el derecho,
+--en cada nodo del árbol.
+mirrorT EmptyT = EmptyT
+mirrorT (NodeT x t1 t2) = NodeT x (mirrorT t2) (mirrorT t1)
+
+toList :: Tree a -> [a]
+--Dado un árbol devuelve una lista que representa el resultado de recorrerlo en modo in-order.
+--Nota: En el modo in-order primero se procesan los elementos del hijo izquierdo, luego la raiz
+--y luego los elementos del hijo derecho.
+toList EmptyT =  []
+toList (NodeT x t1 t2) = (toList t1) ++ [x] ++ (toList t2)
