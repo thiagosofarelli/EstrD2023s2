@@ -181,6 +181,7 @@ edades [] = []
 edades (p:ps) = edad p : edades ps
 
 elMasViejo :: [Persona] -> Persona -- Precondición: La lista posee al menos una persona.
+elMasViejo [] = error "La lista debe poseer al menos una persona"
 elMasViejo [p] = p
 elMasViejo (p:ps) = laQueEsMayor p (elMasViejo ps)
 
