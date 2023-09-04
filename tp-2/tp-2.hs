@@ -59,7 +59,7 @@ pertenece e (x:xs) = e == x || pertenece e xs
 
 apariciones :: Eq a => a -> [a] -> Int
 apariciones     _ [] = 0
-apariciones e (x:xs) = unoSiOCeroSiNo(e == x) + apariciones e xs
+apariciones e (x:xs) = unoSi(e == x) + apariciones e xs
                        
 -- 9
 
@@ -216,8 +216,8 @@ cucu = ConsPokemon Planta 120
 kiki = ConsPokemon Agua 300
 
 -- Entrenadores
-buchu = ConsEntrenador "Buchu" [squirtle, kiki]
-cacho = ConsEntrenador "Cacho" [snorlax, cacto, cucu, kiki, squirtle]
+buchu = ConsEntrenador "Buchu" [snorlax, cacto]
+cacho = ConsEntrenador "Cacho" [squirtle, cucu]
 
 cantPokemon :: Entrenador -> Int
 --Devuelve la cantidad de Pokémon que posee el entrenador.
@@ -249,15 +249,15 @@ sonDelMismoTipo _ _ = False
 cuantosDeTipo_De_LeGananATodosLosDe_ :: TipoDePokemon -> Entrenador -> Entrenador -> Int 
 --Dados dos entrenadores, indica la cantidad de Pokemon de cierto tipo, que le ganarían
 --a los Pokemon del segundo entrenador.
-cuantosDeTipo_De_LeGananATodosLosDe_ tipo e1 e2 = cantidadDeVictoriasDe_FrenteA (pokemonesDeTipoDe tipo (listaDePokemones e1)) (listaDePokemones e2)
+cuantosDeTipo_De_LeGananATodosLosDe_ tipo e1 e2 = cantidadDeVencedoresDe_FrenteA (pokemonesDeTipoDe tipo (listaDePokemones e1)) (listaDePokemones e2)
 
-cantidadDeVictoriasDe_FrenteA :: [Pokemon] -> [Pokemon] -> Int
-cantidadDeVictoriasDe_FrenteA [] _ = 0
-cantidadDeVictoriasDe_FrenteA (x:xs) (y:ys) = pokemonesVencidosPor_FrenteA_ x ys + cantidadDeVictoriasDe_FrenteA xs ys
+cantidadDeVencedoresDe_FrenteA :: [Pokemon] -> [Pokemon] -> Int
+cantidadDeVencedoresDe_FrenteA [] ys = 0
+cantidadDeVencedoresDe_FrenteA (x:xs) ys = unoSi (leGanaATodos x ys) + cantidadDeVencedoresDe_FrenteA xs ys
 
-pokemonesVencidosPor_FrenteA_ :: Pokemon -> [Pokemon] -> Int
-pokemonesVencidosPor_FrenteA_ _ [] = 0
-pokemonesVencidosPor_FrenteA_ x (y:ys) = unoSiOCeroSiNo (pokemonSuperaA x y) + pokemonesVencidosPor_FrenteA_ x ys
+leGanaATodos :: Pokemon -> [Pokemon] -> Bool
+leGanaATodos _ [] = True
+leGanaATodos poke (y:ys) = pokemonSuperaA poke y && leGanaATodos poke ys
 
 pokemonSuperaA :: Pokemon -> Pokemon -> Bool
 pokemonSuperaA p1 p2 = tipoSuperaA (tipo p1) (tipo p2)
@@ -268,9 +268,9 @@ tipoSuperaA Fuego Planta = True
 tipoSuperaA Planta Agua = True 
 tipoSuperaA _ _ = False
 
-unoSiOCeroSiNo :: Bool -> Int 
-unoSiOCeroSiNo True = 1 
-unoSiOCeroSiNo _ = 0
+unoSi :: Bool -> Int 
+unoSi True = 1 
+unoSi _ = 0
 
 esMaestroPokemon :: Entrenador -> Bool
 --Dado un entrenador, devuelve True si posee al menos un Pokémon de cada tipo posible.
