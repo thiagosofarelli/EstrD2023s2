@@ -144,6 +144,7 @@ losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
 
 -- 5
 sinLosPrimeros :: Int -> [a] -> [a]
+-- Precondición: n no es negativo.
 sinLosPrimeros 0 xs  = xs
 sinLosPrimeros n [] = []
 sinLosPrimeros n (x:xs) = sinLosPrimeros (n-1) xs
