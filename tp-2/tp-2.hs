@@ -137,6 +137,7 @@ repetir n x = x : repetir (n-1) x
 
 -- 4
 losPrimeros :: Int -> [a] -> [a]
+-- Precondición: n no es negativo.
 losPrimeros 0 _      = []
 losPrimeros n []     = []
 losPrimeros n (x:xs) = x : losPrimeros (n-1) xs
