@@ -130,6 +130,8 @@ cuentaRegresiva n = if n >= 1
 
 -- 3
 repetir :: Int -> a -> [a]
+-- Precondición: La cantidad de veces a repetir
+-- no es un número negativo.
 repetir 0 _ = []
 repetir n x = x : repetir (n-1) x
 
