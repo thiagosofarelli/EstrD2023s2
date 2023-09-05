@@ -99,3 +99,14 @@ esTesoro :: Objeto -> Bool
 esTesoro Tesoro = True
 esTesoro _ = False
 
+hayTesoroEn :: [Dir] -> Mapa -> Bool
+hayTesoroEn _ (Fin cofre) = contieneTesoro (objetosDe cofre)
+hayTesoroEn [] (Bifurcacion cofre mapa1 mapa2) = contieneTesoro (objetosDe cofre)
+hayTesoroEn (d:ds) (Bifurcacion cofre mapa1 mapa2) = if esIzq d
+                                                     then hayTesoroEn ds mapa1
+                                                     else hayTesoroEn ds mapa2
+
+esIzq :: Dir -> Bool
+esIzq Izq = True
+esIzq _ = False
+
