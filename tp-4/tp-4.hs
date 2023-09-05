@@ -4,7 +4,11 @@ data Pizza = Prepizza | Capa Ingrediente Pizza
 data Ingrediente = Salsa | Queso | Jamon | Aceitunas Int
     deriving Show
 
-pizza1 = Capa (Aceitunas 10) (Capa Queso Prepizza)
+listaDePizzas = [pizza1, pizza2, pizza3, pizza4]
+pizza1 = Capa Salsa (Capa Jamon (Capa Queso Prepizza))
+pizza2 = Capa Queso (Capa (Aceitunas 3) Prepizza)
+pizza3 = Capa Jamon (Capa Salsa Prepizza)
+pizza4 = Capa (Aceitunas 4) (Capa Jamon Prepizza)
 
 cantidadDeCapas :: Pizza -> Int
 --Dada una pizza devuelve la cantidad de ingredientes
@@ -44,7 +48,7 @@ duplicarAceitunas Prepizza = Prepizza
 duplicarAceitunas (Capa ing pizza) = if esAceituna ing
                                      then Capa (aceitunasDuplicadas ing) (duplicarAceitunas pizza)
                                      else Capa ing (duplicarAceitunas pizza)
-
+                                     
 aceitunasDuplicadas :: Ingrediente -> Ingrediente
 aceitunasDuplicadas (Aceitunas n)     = Aceitunas (n*2)
 aceitunasDuplicadas otroIng           = otroIng
@@ -52,4 +56,46 @@ aceitunasDuplicadas otroIng           = otroIng
 esAceituna :: Ingrediente -> Bool
 esAceituna (Aceitunas n) = True
 esAceituna _             = False
+
+cantCapasPorPizza :: [Pizza] -> [(Int, Pizza)]
+cantCapasPorPizza [] = []
+cantCapasPorPizza (p:ps) = (cantIng p, p) : cantCapasPorPizza ps 
+
+cantIng :: Pizza -> Int
+cantIng Prepizza = 0
+cantIng (Capa ing p) = 1 + cantIng p
+
+data Dir = Izq | Der
+    deriving Show   
+
+data Objeto = Tesoro | Chatarra
+    deriving Show
+
+data Cofre = Cofre [Objeto]
+    deriving Show
+
+data Mapa = Fin Cofre | Bifurcacion Cofre Mapa Mapa
+    deriving Show
+
+mapa1 = Bifurcacion cofre1 mapa2 mapa3
+mapa2 = Fin cofre2
+mapa3 = Fin cofre3
+cofre1 = Cofre [Tesoro]
+cofre2 = Cofre [Chatarra]
+cofre3 = Cofre [Tesoro, Chatarra, Chatarra]
+
+hayTesoro :: Mapa -> Bool
+hayTesoro (Fin cofre) = contieneTesoro (objetosDe cofre)
+hayTesoro (Bifurcacion cofre mapa1 mapa2) = contieneTesoro (objetosDe cofre) || hayTesoro mapa1 || hayTesoro mapa2
+
+objetosDe :: Cofre -> [Objeto]
+objetosDe (Cofre objetos) = objetos
+
+contieneTesoro :: [Objeto] -> Bool
+contieneTesoro [] = False
+contieneTesoro (o:os) = esTesoro o || contieneTesoro os
+
+esTesoro :: Objeto -> Bool
+esTesoro Tesoro = True
+esTesoro _ = False
 
