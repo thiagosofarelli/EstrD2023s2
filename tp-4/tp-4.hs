@@ -79,10 +79,12 @@ data Mapa = Fin Cofre | Bifurcacion Cofre Mapa Mapa
 
 mapa1 = Bifurcacion cofre1 mapa2 mapa3
 mapa2 = Fin cofre2
-mapa3 = Fin cofre3
-cofre1 = Cofre [Tesoro]
+mapa3 = Bifurcacion cofre3 mapa2 mapa4
+mapa4 = Fin cofre4
+cofre1 = Cofre [Chatarra]
 cofre2 = Cofre [Chatarra]
-cofre3 = Cofre [Tesoro, Chatarra, Chatarra]
+cofre3 = Cofre [Chatarra, Chatarra, Chatarra]
+cofre4 = Cofre [Tesoro]
 
 hayTesoro :: Mapa -> Bool
 hayTesoro (Fin cofre) = contieneTesoro (objetosDe cofre)
@@ -110,3 +112,11 @@ esIzq :: Dir -> Bool
 esIzq Izq = True
 esIzq _ = False
 
+caminoAlTesoro :: Mapa -> [Dir]
+--Indica el camino al tesoro. Precondición: existe un tesoro y es único.
+caminoAlTesoro (Fin cofre) = []
+caminoAlTesoro (Bifurcacion cofre mapa1 mapa2) = if contieneTesoro (objetosDe cofre)
+                                                 then []
+                                                 else if hayTesoro (mapa1)
+                                                    then Izq : caminoAlTesoro mapa1
+                                                    else Der : caminoAlTesoro mapa2
