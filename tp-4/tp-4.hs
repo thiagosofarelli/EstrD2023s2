@@ -120,3 +120,20 @@ caminoAlTesoro (Bifurcacion cofre mapa1 mapa2) = if contieneTesoro (objetosDe co
                                                  else if hayTesoro (mapa1)
                                                     then Izq : caminoAlTesoro mapa1
                                                     else Der : caminoAlTesoro mapa2
+
+caminoDeLaRamaMasLarga :: Mapa -> [Dir]
+--Indica el camino de la rama más larga.
+caminoDeLaRamaMasLarga (Fin cofre) = []
+caminoDeLaRamaMasLarga (Bifurcacion cofre mapa1 mapa2) = if heightMapa mapa1 > heightMapa mapa2
+                                                         then Izq : caminoDeLaRamaMasLarga mapa1
+                                                         else Der : caminoDeLaRamaMasLarga mapa2
+
+heightMapa :: Mapa -> Int
+--Dado un mapa devuelve su altura.
+heightMapa (Fin cofre)        = 0
+heightMapa (Bifurcacion cofre mapa1 mapa2) = 1 + max (heightMapa mapa1) (heightMapa mapa2)
+
+tesorosPorNivel :: Mapa -> [[Objeto]]
+--Devuelve los tesoros separados por nivel en el árbol.
+tesorosPorNivel (Fin cofre) = [objetosDe cofre]
+tesorosPorNivel (Bifurcacion cofre mapa1 mapa2) = objetosDe cofre : tesorosPorNivel mapa1 ++ tesorosPorNivel mapa2
