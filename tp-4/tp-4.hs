@@ -137,3 +137,12 @@ tesorosPorNivel :: Mapa -> [[Objeto]]
 --Devuelve los tesoros separados por nivel en el árbol.
 tesorosPorNivel (Fin cofre) = [objetosDe cofre]
 tesorosPorNivel (Bifurcacion cofre mapa1 mapa2) = objetosDe cofre : tesorosPorNivel mapa1 ++ tesorosPorNivel mapa2
+
+todosLosCaminos :: Mapa -> [[Dir]]
+--Devuelve todos lo caminos en el mapa.
+todosLosCaminos (Fin cofre) = []
+todosLosCaminos (Bifurcacion cofre mapa1 mapa2) = [[]] ++ consACada Izq (todosLosCaminos mapa1) ++ consACada Der (todosLosCaminos mapa2)
+
+consACada :: a -> [[a]] -> [[a]]
+consACada n []       = []
+consACada n (x:xs)   = (n:x) : consACada n xs
