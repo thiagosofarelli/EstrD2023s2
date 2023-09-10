@@ -68,6 +68,7 @@ iguales _ _ = False
 -- c
 
 siguiente :: Dir -> Dir
+-- Precondición: La dirección no es Oeste.
 siguiente Norte = Este
 siguiente Este = Sur
 siguiente Sur = Oeste
