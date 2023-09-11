@@ -340,7 +340,7 @@ manada1 = M (Cazador "Alfa" ["Ciervo", "Liebre", "Conejo" ]
 
 manada2 = M (Cazador "Alfa" ["Ciervo", "Liebre", "Conejo" ]
         (Explorador "Beta" ["Bosque", "Lago", "Pradera"] (Cria "Cachorro1") (Cria "Cachorro2"))
-        (Explorador "Gamma" ["Bosque", "Río", "Desierto"] (Cria "Cachorro3") (Cazador "Alfon" ["Ciervo", "Liebre", "Conejo", "Ciervo", "Liebre", "Conejo" ] (Cria "Cachorro5") (Cria "Cachorro6") (Cria "Cachorro7")))
+        (Explorador "Omega" ["Bosque", "Río", "Desierto"] (Cria "Cachorro3") (Cazador "Alfaro" ["Ciervo", "Liebre", "Conejo", "Ciervo", "Liebre", "Conejo" ] (Cria "Cachorro5") (Cria "Cachorro6") (Cria "Cachorro7")))
         (Cria "Cachorro4"))
 
 buenaCaza :: Manada -> Bool
@@ -366,4 +366,45 @@ cantidadDeCriasL (Cria _) = 1
 cantidadDeCriasL (Explorador _ _ l1 l2) = cantidadDeCriasL l1 + cantidadDeCriasL l2
 cantidadDeCriasL (Cazador _ _ l1 l2 l3) = cantidadDeCriasL l1 + cantidadDeCriasL l2 + cantidadDeCriasL l3
 
+elAlfa :: Manada -> (Nombre, Int)
+--Propósito: dada una manada, devuelve el nombre del lobo con más presas cazadas, junto
+--con su cantidad de presas. Nota: se considera que los exploradores y crías tienen cero presas
+--cazadas, y que podrían formar parte del resultado si es que no existen cazadores con más de
+--cero presas
+elAlfa (M l) = elAlfaL l
 
+elAlfaL :: Lobo -> (Nombre, Int)
+elAlfaL (Cria nombre) = (nombre, 0)
+elAlfaL (Explorador nombre _ l1 l2) = elQueTieneMasPresasCazadas [(nombre, 0), elAlfaL l1, elAlfaL l2]
+elAlfaL (Cazador nombre presas l1 l2 l3) = elQueTieneMasPresasCazadas [(nombre, cantidadAlimento presas), elAlfaL l1, elAlfaL l2, elAlfaL l3]
+
+elQueTieneMasPresasCazadas :: [(Nombre, Int)] -> (Nombre, Int)
+elQueTieneMasPresasCazadas (x:[]) = x
+elQueTieneMasPresasCazadas (x:xs) = elMejorEntre x (elQueTieneMasPresasCazadas xs)
+
+elMejorEntre :: (Nombre, Int) -> (Nombre, Int) -> (Nombre, Int)
+elMejorEntre (n1, p1) (n2, p2) = if p1 > p2 
+                                 then (n1, p1)
+                                 else (n2, p2)
+
+losQueExploraron :: Territorio -> Manada -> [Nombre]
+--Propósito: dado un territorio y una manada, devuelve los nombres de los exploradores que
+--pasaron por dicho territorio.
+losQueExploraron terr (M l) = losQueExploraronL terr l
+
+losQueExploraronL :: Territorio -> Lobo -> [Nombre]
+losQueExploraronL terr (Cria _) = []
+losQueExploraronL terr (Explorador n terrs l1 l2) = if pertenece terr terrs
+                                                      then n : losQueExploraronL terr l1 ++ losQueExploraronL terr l2
+                                                      else losQueExploraronL terr l1 ++ losQueExploraronL terr l2
+losQueExploraronL terr (Cazador n _ l1 l2 l3) = losQueExploraronL terr l1  ++ losQueExploraronL terr l2 ++ losQueExploraronL terr l3
+
+exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
+--Propósito: dada una manada, denota la lista de los pares cuyo primer elemento es un territorio y cuyo segundo elemento es la lista de los nombres de los exploradores que exploraron
+--dicho territorio. Los territorios no deben repetirse.
+exploradoresPorTerritorio (M l) = exploradoresPorTerritorioL l
+
+exploradoresPorTerritorioL :: Lobo -> [(Territorio, [Nombre])]
+exploradoresPorTerritorioL (Cria _) = []
+exploradoresPorTerritorioL (Explorador n terrs l1 l2) = registrarTerritorio n 
+exploradoresPorTerritorioL (Cazador n presas l1 l2 l3) = exploradoresPorTerritorioL l1 ++ exploradoresPorTerritorioL l2 ++ exploradoresPorTerritorioL l3
