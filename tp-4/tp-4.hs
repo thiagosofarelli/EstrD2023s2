@@ -184,7 +184,7 @@ sectorEjemplo =  NodeT sector1
 sector1 = S "sector1" [LanzaTorpedos, (Motor 4)] ["Carlos"]
 sector2 = S "sector2" [LanzaTorpedos, (Almacen ([Comida, Torpedo, Oxigeno]))] ["Julio"] 
 sector3 = S "sector3" [(Almacen ([Comida, Oxigeno, Torpedo]))] ["Juan"]
-sector4 = S "sector4" [(Motor 2)] ["Buchu", "Yoel"]
+sector4 = S "sector4" [(Motor 2)] ["Buchu", "Yoel", "Carlos"]
 
 sectores :: Nave -> [SectorId]
 -- Propósito: Devuelve todos los sectores de la nave.
@@ -276,14 +276,44 @@ agregarASectoresT EmptyT _ _                      = EmptyT
 agregarASectoresT (NodeT x t1 t2) sectoresId trip = NodeT (agregarTripulanteASectorS x sectoresId trip) (agregarASectoresT t1 sectoresId trip) (agregarASectoresT t2 sectoresId trip)  
 
 agregarTripulanteASectorS :: Sector -> [SectorId] -> Tripulante -> Sector
-agregarTripulanteASectorS sector sectoresId trip = if estaEn (idSector sector) sectoresId
+agregarTripulanteASectorS sector sectoresId trip = if pertenece (idSector sector) sectoresId
                                                    then agregarTripulanteA trip sector
                                                    else sector 
 
-estaEn :: Eq a => a -> [a] -> Bool --(Misma función que PERTENECE)
-estaEn _ [] = False
-estaEn x (y:ys) = x == y || estaEn x ys
+pertenece :: Eq a => a -> [a] -> Bool
+pertenece _ [] = False
+pertenece e (x:xs) = e == x || pertenece e xs
 
 
 agregarTripulanteA :: Tripulante -> Sector -> Sector
 agregarTripulanteA trip (S id cs tps) = S id cs (trip:tps)
+
+sectoresAsignados :: Tripulante -> Nave -> [SectorId]
+-- Propósito: Devuelve los sectores en donde aparece un tripulante dado
+sectoresAsignados trip (N t) = sectoresDe_ConTripulanteDado t trip
+
+sectoresDe_ConTripulanteDado :: Tree Sector -> Tripulante -> [SectorId]
+sectoresDe_ConTripulanteDado EmptyT _ = []
+sectoresDe_ConTripulanteDado (NodeT x t1 t2) trip = if esTripulanteDe x trip
+                                                    then idSector x : sectoresDe_ConTripulanteDado t1 trip ++ sectoresDe_ConTripulanteDado t2 trip
+                                                    else sectoresDe_ConTripulanteDado t1 trip ++ sectoresDe_ConTripulanteDado t2 trip
+
+esTripulanteDe :: Sector -> Tripulante -> Bool
+esTripulanteDe (S _ _ tps) trip = pertenece trip tps
+
+tripulantes :: Nave -> [Tripulante]
+--Propósito: Devuelve la lista de tripulantes, sin elementos repetidos.
+tripulantes (N t) = sinRepetidos (tripulantesDeT t)
+
+tripulantesDeT :: Tree Sector -> [Tripulante]
+tripulantesDeT EmptyT = []
+tripulantesDeT (NodeT x t1 t2) = tripulantesDeS x ++ tripulantesDeT t1 ++ tripulantesDeT t2
+
+tripulantesDeS :: Sector -> [Tripulante]
+tripulantesDeS (S _ _ tps) = tps
+
+sinRepetidos :: Eq a => [a] -> [a]
+sinRepetidos [] = []
+sinRepetidos (x:xs) = if pertenece x xs
+                      then sinRepetidos xs
+                      else x : sinRepetidos xs
