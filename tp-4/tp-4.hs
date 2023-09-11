@@ -317,3 +317,53 @@ sinRepetidos [] = []
 sinRepetidos (x:xs) = if pertenece x xs
                       then sinRepetidos xs
                       else x : sinRepetidos xs
+
+type Presa = String -- nombre de presa
+
+type Territorio = String -- nombre de territorio
+
+type Nombre = String -- nombre de lobo
+
+data Lobo = Cazador Nombre [Presa] Lobo Lobo Lobo | Explorador Nombre [Territorio] Lobo Lobo | Cria Nombre
+    deriving Show
+
+data Manada = M Lobo 
+    deriving Show
+
+--Construir un valor de tipo Manada que posea 1 cazador, 2 exploradores y que el resto sean
+--crías. 
+
+manada1 = M (Cazador "Alfa" ["Ciervo", "Liebre", "Conejo" ]
+        (Explorador "Beta" ["Bosque", "Lago", "Pradera"] (Cria "Cachorro1") (Cria "Cachorro2"))
+        (Explorador "Gamma" ["Montaña", "Río", "Desierto"] (Cria "Cachorro3") (Cria "Cachorro4"))
+        (Cria "Cachorro5"))
+
+manada2 = M (Cazador "Alfa" ["Ciervo", "Liebre", "Conejo" ]
+        (Explorador "Beta" ["Bosque", "Lago", "Pradera"] (Cria "Cachorro1") (Cria "Cachorro2"))
+        (Explorador "Gamma" ["Bosque", "Río", "Desierto"] (Cria "Cachorro3") (Cazador "Alfon" ["Ciervo", "Liebre", "Conejo", "Ciervo", "Liebre", "Conejo" ] (Cria "Cachorro5") (Cria "Cachorro6") (Cria "Cachorro7")))
+        (Cria "Cachorro4"))
+
+buenaCaza :: Manada -> Bool
+--Propósito: dada una manada, indica si la cantidad de alimento cazado es mayor a la cantidad de crías.
+buenaCaza m = cantidadDeAlimentoM m > cantidadDeCriasM m
+
+cantidadDeAlimentoM :: Manada -> Int
+cantidadDeAlimentoM (M lobo) = cantidadDeAlimentoL lobo
+
+cantidadDeAlimentoL :: Lobo -> Int
+cantidadDeAlimentoL (Cria _) = 0
+cantidadDeAlimentoL (Explorador _ _ l1 l2) = cantidadDeAlimentoL l1 + cantidadDeAlimentoL l2
+cantidadDeAlimentoL (Cazador _ presas l1 l2 l3) = cantidadAlimento presas + cantidadDeAlimentoL l1 + cantidadDeAlimentoL l2 + cantidadDeAlimentoL l3
+
+cantidadAlimento :: [Presa] -> Int
+cantidadAlimento p = length p
+
+cantidadDeCriasM :: Manada -> Int
+cantidadDeCriasM (M lobo) = cantidadDeCriasL lobo
+
+cantidadDeCriasL :: Lobo -> Int
+cantidadDeCriasL (Cria _) = 1
+cantidadDeCriasL (Explorador _ _ l1 l2) = cantidadDeCriasL l1 + cantidadDeCriasL l2
+cantidadDeCriasL (Cazador _ _ l1 l2 l3) = cantidadDeCriasL l1 + cantidadDeCriasL l2 + cantidadDeCriasL l3
+
+
