@@ -34,7 +34,7 @@ esJamon _         = False
 tieneSoloSalsaYQueso :: Pizza -> Bool
 --Dice si una pizza tiene solamente salsa y queso (o sea, no tiene de otros ingredientes. En
 --particular, la prepizza, al no tener ningún ingrediente, debería dar verdadero.)
-tieneSoloSalsaYQueso Prepizza = True
+tieneSoloSalsaYQueso Prepizza         = True
 tieneSoloSalsaYQueso (Capa ing pizza) = esSalsaOQueso ing && tieneSoloSalsaYQueso pizza
 
 esSalsaOQueso :: Ingrediente -> Bool
@@ -44,7 +44,7 @@ esSalsaOQueso _     = False
 
 duplicarAceitunas :: Pizza -> Pizza
 --Recorre cada ingrediente y si es aceitunas duplica su cantidad
-duplicarAceitunas Prepizza = Prepizza
+duplicarAceitunas Prepizza         = Prepizza
 duplicarAceitunas (Capa ing pizza) = if esAceituna ing
                                      then Capa (aceitunasDuplicadas ing) (duplicarAceitunas pizza)
                                      else Capa ing (duplicarAceitunas pizza)
@@ -58,11 +58,11 @@ esAceituna (Aceitunas n) = True
 esAceituna _             = False
 
 cantCapasPorPizza :: [Pizza] -> [(Int, Pizza)]
-cantCapasPorPizza [] = []
+cantCapasPorPizza []     = []
 cantCapasPorPizza (p:ps) = (cantIng p, p) : cantCapasPorPizza ps 
 
 cantIng :: Pizza -> Int
-cantIng Prepizza = 0
+cantIng Prepizza     = 0
 cantIng (Capa ing p) = 1 + cantIng p
 
 data Dir = Izq | Der
@@ -87,23 +87,23 @@ cofre3 = Cofre [Chatarra, Chatarra, Chatarra]
 cofre4 = Cofre [Tesoro]
 
 hayTesoro :: Mapa -> Bool
-hayTesoro (Fin cofre) = contieneTesoro (objetosDe cofre)
+hayTesoro (Fin cofre)                     = contieneTesoro (objetosDe cofre)
 hayTesoro (Bifurcacion cofre mapa1 mapa2) = contieneTesoro (objetosDe cofre) || hayTesoro mapa1 || hayTesoro mapa2
 
 objetosDe :: Cofre -> [Objeto]
 objetosDe (Cofre objetos) = objetos
 
 contieneTesoro :: [Objeto] -> Bool
-contieneTesoro [] = False
+contieneTesoro []     = False
 contieneTesoro (o:os) = esTesoro o || contieneTesoro os
 
 esTesoro :: Objeto -> Bool
 esTesoro Tesoro = True
-esTesoro _ = False
+esTesoro _      = False
 
 hayTesoroEn :: [Dir] -> Mapa -> Bool
-hayTesoroEn _ (Fin cofre) = contieneTesoro (objetosDe cofre)
-hayTesoroEn [] (Bifurcacion cofre mapa1 mapa2) = contieneTesoro (objetosDe cofre)
+hayTesoroEn _ (Fin cofre)                          = contieneTesoro (objetosDe cofre)
+hayTesoroEn [] (Bifurcacion cofre mapa1 mapa2)     = contieneTesoro (objetosDe cofre)
 hayTesoroEn (d:ds) (Bifurcacion cofre mapa1 mapa2) = if esIzq d
                                                      then hayTesoroEn ds mapa1
                                                      else hayTesoroEn ds mapa2
@@ -114,7 +114,7 @@ esIzq _ = False
 
 caminoAlTesoro :: Mapa -> [Dir]
 --Indica el camino al tesoro. Precondición: existe un tesoro y es único.
-caminoAlTesoro (Fin cofre) = []
+caminoAlTesoro (Fin cofre)                     = []
 caminoAlTesoro (Bifurcacion cofre mapa1 mapa2) = if contieneTesoro (objetosDe cofre)
                                                  then []
                                                  else if hayTesoro (mapa1)
@@ -123,24 +123,24 @@ caminoAlTesoro (Bifurcacion cofre mapa1 mapa2) = if contieneTesoro (objetosDe co
 
 caminoDeLaRamaMasLarga :: Mapa -> [Dir]
 --Indica el camino de la rama más larga.
-caminoDeLaRamaMasLarga (Fin cofre) = []
+caminoDeLaRamaMasLarga (Fin cofre)                     = []
 caminoDeLaRamaMasLarga (Bifurcacion cofre mapa1 mapa2) = if heightMapa mapa1 > heightMapa mapa2
                                                          then Izq : caminoDeLaRamaMasLarga mapa1
                                                          else Der : caminoDeLaRamaMasLarga mapa2
 
 heightMapa :: Mapa -> Int
 --Dado un mapa devuelve su altura.
-heightMapa (Fin cofre)        = 0
+heightMapa (Fin cofre)                     = 0
 heightMapa (Bifurcacion cofre mapa1 mapa2) = 1 + max (heightMapa mapa1) (heightMapa mapa2)
 
 tesorosPorNivel :: Mapa -> [[Objeto]]
 --Devuelve los tesoros separados por nivel en el árbol.
-tesorosPorNivel (Fin cofre) = [objetosDe cofre]
+tesorosPorNivel (Fin cofre)                     = [objetosDe cofre]
 tesorosPorNivel (Bifurcacion cofre mapa1 mapa2) = objetosDe cofre : tesorosPorNivel mapa1 ++ tesorosPorNivel mapa2
 
 todosLosCaminos :: Mapa -> [[Dir]]
 --Devuelve todos lo caminos en el mapa.
-todosLosCaminos (Fin cofre) = []
+todosLosCaminos (Fin cofre)                     = []
 todosLosCaminos (Bifurcacion cofre mapa1 mapa2) = [[]] ++ consACada Izq (todosLosCaminos mapa1) ++ consACada Der (todosLosCaminos mapa2)
 
 consACada :: a -> [[a]] -> [[a]]
@@ -191,7 +191,7 @@ sectores :: Nave -> [SectorId]
 sectores (N t) = sectoresT t
 
 sectoresT :: Tree Sector -> [SectorId]
-sectoresT EmptyT = []
+sectoresT EmptyT          = []
 sectoresT (NodeT x t1 t2) = idSector x : sectoresT t1 ++ sectoresT t2
 
 idSector :: Sector -> SectorId
@@ -203,25 +203,25 @@ poderDePropulsion :: Nave -> Int
 poderDePropulsion (N t) = poderDePropulsionT t
 
 poderDePropulsionT :: Tree Sector -> Int
-poderDePropulsionT EmptyT = 0
+poderDePropulsionT EmptyT          = 0
 poderDePropulsionT (NodeT x t1 t2) = poderDePropulsionS x + poderDePropulsionT t1 + poderDePropulsionT t2
 
 poderDePropulsionS :: Sector -> Int
 poderDePropulsionS (S _ componentes _) = poderDePropulsionC componentes
 
 poderDePropulsionC :: [Componente] -> Int
-poderDePropulsionC [] = 0
+poderDePropulsionC []     = 0
 poderDePropulsionC (x:xs) = if esMotor x
                             then poderDeMotor x + poderDePropulsionC xs
                             else poderDePropulsionC xs
 
 esMotor :: Componente -> Bool
 esMotor (Motor x) = True
-esMotor _ = False
+esMotor _         = False
 
 poderDeMotor :: Componente -> Int
 poderDeMotor (Motor x) = x
-poderDeMotor _ = 0
+poderDeMotor _         = 0
 
 
 barriles :: Nave -> [Barril]
@@ -229,25 +229,25 @@ barriles :: Nave -> [Barril]
 barriles (N t) = barrilesT t
 
 barrilesT :: Tree Sector -> [Barril]
-barrilesT EmptyT = []
+barrilesT EmptyT          = []
 barrilesT (NodeT s t1 t2) = barrilesS s ++ barrilesT t1 ++ barrilesT t2
 
 barrilesS :: Sector -> [Barril]
 barrilesS (S _ componentes _) = barrilesC componentes
 
 barrilesC :: [Componente] -> [Barril]
-barrilesC [] = []
+barrilesC []     = []
 barrilesC (x:xs) = if esAlmacen x
                    then barrilesDeAlmacen x ++ barrilesC xs
                    else barrilesC xs
 
 esAlmacen :: Componente -> Bool
 esAlmacen (Almacen x) = True
-esAlmacen _ = False
+esAlmacen _           = False
 
 barrilesDeAlmacen :: Componente -> [Barril]
 barrilesDeAlmacen (Almacen x) = x
-barrilesDeAlmacen _ = []
+barrilesDeAlmacen _           = []
 
 agregarASector :: [Componente] -> SectorId -> Nave -> Nave
 --Propósito: Añade una lista de componentes a un sector de la nave.
@@ -255,7 +255,7 @@ agregarASector :: [Componente] -> SectorId -> Nave -> Nave
 agregarASector componentes sectorId (N t) = N (agregarASectorT t componentes sectorId)
 
 agregarASectorT :: Tree Sector -> [Componente] -> SectorId -> Tree Sector
-agregarASectorT EmptyT _ _ = EmptyT
+agregarASectorT EmptyT _ _                     = EmptyT
 agregarASectorT (NodeT x t1 t2) componentes id = NodeT (agregarASectorS x id componentes) (agregarASectorT t1 componentes id) (agregarASectorT t2 componentes id) 
 
 agregarASectorS :: Sector -> SectorId -> [Componente] -> Sector
@@ -281,7 +281,7 @@ agregarTripulanteASectorS sector sectoresId trip = if pertenece (idSector sector
                                                    else sector 
 
 pertenece :: Eq a => a -> [a] -> Bool
-pertenece _ [] = False
+pertenece _ []     = False
 pertenece e (x:xs) = e == x || pertenece e xs
 
 
@@ -293,7 +293,7 @@ sectoresAsignados :: Tripulante -> Nave -> [SectorId]
 sectoresAsignados trip (N t) = sectoresDe_ConTripulanteDado t trip
 
 sectoresDe_ConTripulanteDado :: Tree Sector -> Tripulante -> [SectorId]
-sectoresDe_ConTripulanteDado EmptyT _ = []
+sectoresDe_ConTripulanteDado EmptyT _             = []
 sectoresDe_ConTripulanteDado (NodeT x t1 t2) trip = if esTripulanteDe x trip
                                                     then idSector x : sectoresDe_ConTripulanteDado t1 trip ++ sectoresDe_ConTripulanteDado t2 trip
                                                     else sectoresDe_ConTripulanteDado t1 trip ++ sectoresDe_ConTripulanteDado t2 trip
@@ -306,14 +306,14 @@ tripulantes :: Nave -> [Tripulante]
 tripulantes (N t) = sinRepetidos (tripulantesDeT t)
 
 tripulantesDeT :: Tree Sector -> [Tripulante]
-tripulantesDeT EmptyT = []
+tripulantesDeT EmptyT          = []
 tripulantesDeT (NodeT x t1 t2) = tripulantesDeS x ++ tripulantesDeT t1 ++ tripulantesDeT t2
 
 tripulantesDeS :: Sector -> [Tripulante]
 tripulantesDeS (S _ _ tps) = tps
 
 sinRepetidos :: Eq a => [a] -> [a]
-sinRepetidos [] = []
+sinRepetidos []     = []
 sinRepetidos (x:xs) = if pertenece x xs
                       then sinRepetidos xs
                       else x : sinRepetidos xs
@@ -335,12 +335,15 @@ data Manada = M Lobo
 
 manada1 = M (Cazador "Alfa" ["Ciervo", "Liebre", "Conejo" ]
         (Explorador "Beta" ["Bosque", "Lago", "Pradera"] (Cria "Cachorro1") (Cria "Cachorro2"))
-        (Explorador "Gamma" ["Montaña", "Río", "Desierto"] (Cria "Cachorro3") (Cria "Cachorro4"))
+        (Explorador "Gamma" ["Montania", "Lago", "Desierto"] (Cria "Cachorro3") (Cria "Cachorro4"))
         (Cria "Cachorro5"))
 
 manada2 = M (Cazador "Alfa" ["Ciervo", "Liebre", "Conejo" ]
         (Explorador "Beta" ["Bosque", "Lago", "Pradera"] (Cria "Cachorro1") (Cria "Cachorro2"))
-        (Explorador "Omega" ["Bosque", "Río", "Desierto"] (Cria "Cachorro3") (Cazador "Alfaro" ["Ciervo", "Liebre", "Conejo", "Ciervo", "Liebre", "Conejo" ] (Cria "Cachorro5") (Cria "Cachorro6") (Cria "Cachorro7")))
+        (Explorador "Omega" ["Bosque", "Rio", "Desierto"] (Cria "Cachorro3") (Cazador "Alfaro" ["Ciervo", "Liebre", "Conejo", "Ciervo", "Liebre", "Conejo" ] (Cria "Cachorro5") (Cria "Cachorro6") (Cazador "Alfita" ["Ciervo", "Liebre", "Conejo" ]
+        (Explorador "Betyx" ["Bosque", "Lago", "Pradera"] (Cria "Cachorro1") (Cria "Cachorro2"))
+        (Explorador "Gamma" ["Montania", "Lago", "Desierto"] (Cria "Cachorro3") (Cria "Cachorro4"))
+        (Cria "Cachorro5"))))
         (Cria "Cachorro4"))
 
 buenaCaza :: Manada -> Bool
@@ -351,8 +354,8 @@ cantidadDeAlimentoM :: Manada -> Int
 cantidadDeAlimentoM (M lobo) = cantidadDeAlimentoL lobo
 
 cantidadDeAlimentoL :: Lobo -> Int
-cantidadDeAlimentoL (Cria _) = 0
-cantidadDeAlimentoL (Explorador _ _ l1 l2) = cantidadDeAlimentoL l1 + cantidadDeAlimentoL l2
+cantidadDeAlimentoL (Cria _)                    = 0
+cantidadDeAlimentoL (Explorador _ _ l1 l2)      = cantidadDeAlimentoL l1 + cantidadDeAlimentoL l2
 cantidadDeAlimentoL (Cazador _ presas l1 l2 l3) = cantidadAlimento presas + cantidadDeAlimentoL l1 + cantidadDeAlimentoL l2 + cantidadDeAlimentoL l3
 
 cantidadAlimento :: [Presa] -> Int
@@ -362,7 +365,7 @@ cantidadDeCriasM :: Manada -> Int
 cantidadDeCriasM (M lobo) = cantidadDeCriasL lobo
 
 cantidadDeCriasL :: Lobo -> Int
-cantidadDeCriasL (Cria _) = 1
+cantidadDeCriasL (Cria _)               = 1
 cantidadDeCriasL (Explorador _ _ l1 l2) = cantidadDeCriasL l1 + cantidadDeCriasL l2
 cantidadDeCriasL (Cazador _ _ l1 l2 l3) = cantidadDeCriasL l1 + cantidadDeCriasL l2 + cantidadDeCriasL l3
 
@@ -374,8 +377,8 @@ elAlfa :: Manada -> (Nombre, Int)
 elAlfa (M l) = elAlfaL l
 
 elAlfaL :: Lobo -> (Nombre, Int)
-elAlfaL (Cria nombre) = (nombre, 0)
-elAlfaL (Explorador nombre _ l1 l2) = elQueTieneMasPresasCazadas [(nombre, 0), elAlfaL l1, elAlfaL l2]
+elAlfaL (Cria nombre)                    = (nombre, 0)
+elAlfaL (Explorador nombre _ l1 l2)      = elQueTieneMasPresasCazadas [(nombre, 0), elAlfaL l1, elAlfaL l2]
 elAlfaL (Cazador nombre presas l1 l2 l3) = elQueTieneMasPresasCazadas [(nombre, cantidadAlimento presas), elAlfaL l1, elAlfaL l2, elAlfaL l3]
 
 elQueTieneMasPresasCazadas :: [(Nombre, Int)] -> (Nombre, Int)
@@ -393,18 +396,53 @@ losQueExploraron :: Territorio -> Manada -> [Nombre]
 losQueExploraron terr (M l) = losQueExploraronL terr l
 
 losQueExploraronL :: Territorio -> Lobo -> [Nombre]
-losQueExploraronL terr (Cria _) = []
+losQueExploraronL terr (Cria _)                   = []
 losQueExploraronL terr (Explorador n terrs l1 l2) = if pertenece terr terrs
                                                       then n : losQueExploraronL terr l1 ++ losQueExploraronL terr l2
                                                       else losQueExploraronL terr l1 ++ losQueExploraronL terr l2
-losQueExploraronL terr (Cazador n _ l1 l2 l3) = losQueExploraronL terr l1  ++ losQueExploraronL terr l2 ++ losQueExploraronL terr l3
+losQueExploraronL terr (Cazador n _ l1 l2 l3)     = losQueExploraronL terr l1  ++ losQueExploraronL terr l2 ++ losQueExploraronL terr l3
 
 exploradoresPorTerritorio :: Manada -> [(Territorio, [Nombre])]
---Propósito: dada una manada, denota la lista de los pares cuyo primer elemento es un territorio y cuyo segundo elemento es la lista de los nombres de los exploradores que exploraron
+--Propósito: Dada una manada, denota la lista de los pares cuyo primer elemento es un territorio y cuyo segundo elemento es la lista de los nombres de los exploradores que exploraron
 --dicho territorio. Los territorios no deben repetirse.
-exploradoresPorTerritorio (M l) = exploradoresPorTerritorioL l
+exploradoresPorTerritorio (M lobo) = unificarTuplas (tuplasRepetidas lobo)
 
-exploradoresPorTerritorioL :: Lobo -> [(Territorio, [Nombre])]
-exploradoresPorTerritorioL (Cria _) = []
-exploradoresPorTerritorioL (Explorador n terrs l1 l2) = registrarTerritorio n 
-exploradoresPorTerritorioL (Cazador n presas l1 l2 l3) = exploradoresPorTerritorioL l1 ++ exploradoresPorTerritorioL l2 ++ exploradoresPorTerritorioL l3
+tuplasRepetidas :: Lobo -> [(Territorio, Nombre)]
+tuplasRepetidas (Cria _)                               = []
+tuplasRepetidas (Cazador _ _ lobo1 lobo2 lobo3)        = tuplasRepetidas lobo1 ++ tuplasRepetidas lobo2 ++ tuplasRepetidas lobo3
+tuplasRepetidas (Explorador n ts lobo1 lobo2)          = (crearTuplasAPartirDe n ts) ++ tuplasRepetidas lobo1 ++ tuplasRepetidas lobo2
+
+crearTuplasAPartirDe :: Nombre -> [Territorio] -> [(Territorio, Nombre)]
+crearTuplasAPartirDe nombre []          = []
+crearTuplasAPartirDe nombre (t:ts)      = (t, nombre) : (crearTuplasAPartirDe nombre ts)
+
+unificarTuplas :: [(Territorio, Nombre)] -> [(Territorio, [Nombre])]
+unificarTuplas []          = []
+unificarTuplas (ts:tss)    = laTuplaEstaSinoSumale ts (unificarTuplas tss)
+
+laTuplaEstaSinoSumale :: (Territorio, Nombre) -> [(Territorio, [Nombre])] -> [(Territorio, [Nombre])]
+laTuplaEstaSinoSumale (t, n) []                 = [(t, [n])]
+laTuplaEstaSinoSumale tupla (tp:tps)            = if sonElMismoTerritorio (fst tupla) (fst tp)
+                                                  then (fst tp, (snd tupla) : (snd tp)) : tps
+                                                  else tp : laTuplaEstaSinoSumale tupla tps
+
+sonElMismoTerritorio :: String -> String -> Bool
+sonElMismoTerritorio n1 n2      = n1 == n2
+
+superioresDelCazador :: Nombre -> Manada -> [Nombre]
+--Propósito: dado un nombre de cazador y una manada, indica el nombre de todos los
+--cazadores que tienen como subordinado al cazador dado (directa o indirectamente).
+--Precondición: hay un cazador con dicho nombre y es único.
+superioresDelCazador nombre (M lobo) = superiores nombre lobo
+
+superiores :: Nombre -> Lobo -> [Nombre]
+superiores n (Cria _)                             = []
+superiores n (Explorador nombre _ lobo1 lobo2)    = (superiores n lobo1) ++ (superiores n lobo2)
+superiores n (Cazador nombre _ lobo1 lobo2 lobo3) = if ((elLoboDeNombreEstaEntre n lobo1) || (elLoboDeNombreEstaEntre n lobo2) || (elLoboDeNombreEstaEntre n lobo3))
+                                                    then nombre : (superiores n lobo1) ++ (superiores n lobo2) ++ (superiores n lobo3)
+                                                    else (superiores n lobo1) ++ (superiores n lobo2) ++ (superiores n lobo3)
+
+elLoboDeNombreEstaEntre :: Nombre -> Lobo -> Bool
+elLoboDeNombreEstaEntre n (Cria _)                             = False
+elLoboDeNombreEstaEntre n (Explorador nombre _ lobo1 lobo2)    = elLoboDeNombreEstaEntre n lobo1 || elLoboDeNombreEstaEntre n lobo2
+elLoboDeNombreEstaEntre n (Cazador nombre _ lobo1 lobo2 lobo3) = (n == nombre) || elLoboDeNombreEstaEntre n lobo1 || elLoboDeNombreEstaEntre n lobo2 || elLoboDeNombreEstaEntre n lobo3
