@@ -123,7 +123,7 @@ factorial n = n * factorial (n-1)
 -- 2
 
 cuentaRegresiva :: Int -> [Int] 
-cuentaRegresiva 1 = [1]
+cuentaRegresiva 0 = [0]
 cuentaRegresiva n = if n >= 1
                     then n : cuentaRegresiva (n-1)
                     else []
