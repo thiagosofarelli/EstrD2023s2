@@ -114,11 +114,22 @@ cantTesorosEntre :: Int -> Int -> Camino -> Int
 --Dado un rango de pasos, indica la cantidad de tesoros que hay en ese rango. Por ejemplo, si
 --el rango es 3 y 5, indica la cantidad de tesoros que hay entre hacer 3 pasos y hacer 5. Están
 --incluidos tanto 3 como 5 en el resultado.
-cantTesorosEntre _ _ Fin                           = 0 
-cantTesorosEntre pasos1 pasos2 (Nada cam)          = cantTesorosEntre (pasos1 - 1) (pasos2 - 1) cam
-cantTesorosEntre pasos1 pasos2 (Cofre objetos cam) = if pasos1 <= 0 && pasos2 >= 0
-                                                     then cantTesorosEnObj objetos + cantTesorosEntre (pasos1 - 1) (pasos2 - 1) cam
-                                                     else cantTesorosEntre (pasos1 - 1) (pasos2 -1) cam
+--Precondición: i >= 0. j >= i.
+cantTesorosEntre 0 m cam                  = cantDeTesorosEnPasos m cam
+cantTesorosEntre n m Fin                 = 0
+cantTesorosEntre n m (Nada cam)          = cantTesorosEntre (n-1) (m-1) cam
+cantTesorosEntre n m (Cofre objetos cam) = cantTesorosEntre (n-1) (m-1) cam
+
+cantDeTesorosEnPasos :: Int -> Camino -> Int
+--Precondición: i >= 0
+cantDeTesorosEnPasos 0 cam = tesorosAca cam
+cantDeTesorosEnPasos n Fin = 0
+cantDeTesorosEnPasos n (Nada cam) = cantDeTesorosEnPasos (n-1) cam
+cantDeTesorosEnPasos n (Cofre objetos cam) = cantTesorosEnObj objetos + cantDeTesorosEnPasos (n-1) cam
+
+tesorosAca :: Camino -> Int
+tesorosAca (Cofre objetos cam) = cantTesorosEnObj objetos
+tesorosAca _ = 0
 
 -- Ejercicio 2. Tipos Arbóreos
 
