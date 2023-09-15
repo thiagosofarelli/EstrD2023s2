@@ -60,7 +60,7 @@ hayTesoro Fin                 = False
 hayTesoro (Nada cam)          = hayTesoro cam
 hayTesoro (Cofre objetos cam) = hayTesoroEn' objetos || hayTesoro cam
 
-camino1 = Cofre [Cacharro] (Cofre [Cacharro] (Cofre [Cacharro, Cacharro] Fin))
+camino1 = Cofre [Cacharro] (Cofre [Cacharro] (Cofre [Tesoro, Cacharro] Fin))
 
 hayTesoroEn' :: [Objeto] -> Bool
 hayTesoroEn' []     = False
@@ -94,7 +94,12 @@ hayTesoroAca _                   = False
 
 alMenosNTesoros :: Int -> Camino -> Bool
 --Indica si hay al menos "n" tesoros en el camino.
-alMenosNTesoros n cam = n <= cantTesorosEn cam
+alMenosNTesoros 0 cam = True
+alMenosNTesoros n Fin = False
+alMenosNTesoros n (Nada cam) = alMenosNTesoros n cam
+alMenosNTesoros n (Cofre objeto cam) = if (n <= cantTesorosEnObj objeto)
+                                       then alMenosNTesoros 0 cam
+                                       else alMenosNTesoros (n - cantTesorosEnObj objeto) cam
 
 cantTesorosEn :: Camino -> Int
 cantTesorosEn Fin                 = 0
