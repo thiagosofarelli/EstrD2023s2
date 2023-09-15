@@ -29,7 +29,7 @@ sacar :: Color -> Celda -> Celda
 sacar _ CeldaVacia       = CeldaVacia
 sacar c (Bolita col cel) = if sonElMismoColor c col     
                            then cel
-                           else (Bolita col (sacar c cel)) 
+                           else Bolita col (sacar c cel)
 
 ponerN :: Int -> Color -> Celda -> Celda
 ponerN 0 _ cel   = cel 
