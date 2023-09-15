@@ -60,7 +60,7 @@ hayTesoro Fin                 = False
 hayTesoro (Nada cam)          = hayTesoro cam
 hayTesoro (Cofre objetos cam) = hayTesoroEn' objetos || hayTesoro cam
 
-camino1 = Cofre [Tesoro] (Cofre [Cacharro] (Cofre [Cacharro, Tesoro] Fin))
+camino1 = Cofre [Cacharro] (Cofre [Cacharro] (Cofre [Cacharro, Cacharro] Fin))
 
 hayTesoroEn' :: [Objeto] -> Bool
 hayTesoroEn' []     = False
@@ -74,7 +74,7 @@ pasosHastaTesoro :: Camino -> Int
 --Indica la cantidad de pasos que hay que recorrer hasta llegar al primer cofre con un tesoro.
 --Si un cofre con un tesoro está al principio del camino, la cantidad de pasos a recorrer es 0.
 --Precondición: tiene que haber al menos un tesoro
-pasosHastaTesoro Fin                 = 0
+pasosHastaTesoro Fin                 = error "No hay tesoros"
 pasosHastaTesoro (Nada cam)          = 1 + pasosHastaTesoro cam
 pasosHastaTesoro (Cofre objetos cam) = if hayTesoroEn' objetos
                                        then 0 
