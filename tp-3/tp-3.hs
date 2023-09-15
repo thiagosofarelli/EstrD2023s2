@@ -191,7 +191,7 @@ toList :: Tree a -> [a]
 --Nota: En el modo in-order primero se procesan los elementos del hijo izquierdo, luego la raiz
 --y luego los elementos del hijo derecho.
 toList EmptyT          =  []
-toList (NodeT x t1 t2) = (toList t1) ++ [x] ++ (toList t2)
+toList (NodeT x t1 t2) = toList t1 ++ [x] ++ toList t2
 
 levelN :: Int -> Tree a -> [a]
 --Dados un número n y un árbol devuelve una lista con los nodos de nivel n. El nivel de un
