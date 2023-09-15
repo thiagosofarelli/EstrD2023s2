@@ -269,7 +269,14 @@ sectorConNuevosComponentes (S id cs tps) componentes = S id componentes tps
 asignarTripulanteA :: Tripulante -> [SectorId] -> Nave -> Nave
 --Propósito: Incorpora un tripulante a una lista de sectores de la nave.
 --Precondición: Todos los id de la lista existen en la nave.
-asignarTripulanteA trip sectoresId (N t) = N (agregarASectoresT t sectoresId trip)
+asignarTripulanteA trip sectoresId (N t) = if estanTodosEn sectoresId (sectores (N t))
+                                           then N (agregarASectoresT t sectoresId trip)
+                                           else error "No existen todos los sectores dados en esta Nave"
+
+estanTodosEn :: [SectorId] -> [SectorId] -> Bool
+estanTodosEn [] _ = True
+estanTodosEn (x:xs) [] = False
+estanTodosEn (x:xs) ys = pertenece x ys && estanTodosEn xs ys
 
 agregarASectoresT :: Tree Sector -> [SectorId] -> Tripulante -> Tree Sector
 agregarASectoresT EmptyT _ _                      = EmptyT
