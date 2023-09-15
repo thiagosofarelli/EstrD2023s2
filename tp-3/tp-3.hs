@@ -33,7 +33,7 @@ sacar c (Bolita col cel) = if sonElMismoColor c col
 
 ponerN :: Int -> Color -> Celda -> Celda
 ponerN 0 _ cel   = cel 
-ponerN n col cel = (Bolita col (ponerN (n-1) col cel))
+ponerN n col cel = Bolita col (ponerN (n-1) col cel)
 
 celda0 = Bolita Rojo (Bolita Azul (Bolita Rojo (Bolita Azul CeldaVacia)))
 celda1 = Bolita Azul (Bolita Azul CeldaVacia)
