@@ -1,4 +1,4 @@
-module Set (
+module SetV1 (
     Set, emptyS, addS, belongs, sizeS, removeS, unionS, setToList
 ) where
 
@@ -13,7 +13,9 @@ emptyS :: Set a
 emptyS = Set []
 
 addS :: Eq a => a -> Set a -> Set a
-addS e (Set a) = Set (e:a) 
+addS e (Set a) = if belongs e (Set a)
+                 then Set a
+                 else Set (e:a) 
 
 belongs :: Eq a => a -> Set a -> Bool
 belongs e (Set a) = elem e a
@@ -27,7 +29,7 @@ removeS e (Set a) = Set (removeE e a)
 unionS :: Eq a => Set a -> Set a -> Set a
 --Dados dos conjuntos devuelve un conjunto con todos los elementos de ambos conjuntos.
 unionS (Set []) set     = set
-unionS (Set (x:xs)) set = unionS (Set xs) (addS x set)
+unionS (Set (x:xs)) set = unionS (addS x set) (Set xs) 
 
 setToList :: Eq a => Set a -> [a]
 setToList (Set a) = sinRepetidos a

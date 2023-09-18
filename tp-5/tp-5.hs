@@ -1,4 +1,4 @@
-import Set
+import SetV1
 
 --module Set (
 --   Set, emptyS, addS, belongs, sizeS, removeS, unionS, setToList
