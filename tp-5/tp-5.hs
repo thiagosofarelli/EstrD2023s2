@@ -1,10 +1,6 @@
 import SetV1
 
---module Set (
---   Set, emptyS, addS, belongs, sizeS, removeS, unionS, setToList
---) where
-
---data Set a = Set [a]
+import QueueV1
 
 setPrueba :: Set Int
 setPrueba = addS 3 emptyS
@@ -40,3 +36,13 @@ unirTodos arbol = agregarListaAlSet (transformarArbolALista arbol)
 transformarArbolALista :: Eq a => Tree (Set a) -> [a]
 transformarArbolALista EmptyT = []
 transformarArbolALista (NodeT set t1 t2) = setToList set ++ transformarArbolALista t1 ++ transformarArbolALista t2 
+
+queuePrueba :: Queue Int
+queuePrueba =  enqueue 3 emptyQ
+
+lengthQ :: Queue a -> Int
+--Cuenta la cantidad de elementos de la cola.
+lengthQ q = if isEmptyQ q
+            then 0
+            else 1 + lengthQ (dequeue q)
+
