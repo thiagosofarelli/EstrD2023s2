@@ -11,8 +11,7 @@ emptyQ = Queue []
 
 isEmptyQ :: Queue a -> Bool
 --Dada una cola indica si la cola está vacía.
-isEmptyQ (Queue []) = True
-isEmptyQ _          = False
+isEmptyQ (Queue xs) = null xs
 
 
 enqueue :: a -> Queue a -> Queue a
@@ -21,12 +20,21 @@ enqueue e (Queue xs) = Queue (e:xs)
 
 firstQ :: Queue a -> a
 --Dada una cola devuelve el primer elemento de la cola
-firstQ (Queue [])  = error "La lista no puede ser vacía"
-firstQ (Queue [x]) = x
-firstQ (Queue (_:xs)) = firstQ (Queue xs)
+--Es parcial, la cola debe tener al menos un elemento.
+firstQ (Queue a) = elUltimo a
+
+elUltimo :: [a] -> a
+--Es parcial, debe haber al menos un elemento en la lista
+elUltimo    []  = error "La cola no tiene al menos un elemento"
+elUltimo (x:[]) = x
+elUltimo (x:xs) = elUltimo xs
 
 dequeue :: Queue a -> Queue a
 --Dada una cola la devuelve sin su primer elemento.
-dequeue (Queue [])      = error "La lista no puede ser vacía"
-dequeue (Queue [x])     = Queue []
-dequeue (Queue (x:xs))  = enqueue x (dequeue (Queue xs))
+dequeue (Queue a) = (Queue (sinElUltimo a))
+
+sinElUltimo :: [a] -> [a]
+-- Es parcial, debe haber al menos un elemento en la lista
+sinElUltimo     [] = error "La cola no tiene al menos un elemento"
+sinElUltimo (x:[]) = []
+sinElUltimo (x:xs) = x : sinElUltimo xs

@@ -22,23 +22,10 @@ removeS e (Set a) = Set (removeE e a)
 
 unionS :: Eq a => Set a -> Set a -> Set a
 --Dados dos conjuntos devuelve un conjunto con todos los elementos de ambos conjuntos.
-unionS (Set []) (Set a) = Set (sinRepetidos a)
-unionS (Set (x:xs)) set = unionS (Set xs) (addS x set)
+unionS (Set xs) (Set ys) = Set (sinRepetidos (xs ++ ys))
 
 setToList :: Eq a => Set a -> [a]
 setToList (Set a) = sinRepetidos a
-
-
-
-
-
-
-
-
-
-
-
-
 
 -- Funciones que el usuario NO puede usar
 pertenece :: Eq a => a -> [a] -> Bool
