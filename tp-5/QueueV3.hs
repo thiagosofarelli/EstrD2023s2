@@ -28,11 +28,13 @@ firstQ (Queue fs _) = head fs
 
 dequeue :: Queue a -> Queue a
 --Dada una cola la devuelve sin su primer elemento.
-dequeue (Queue fs bs) = if null fs || null (tail fs)
-                      then (Queue (bs) [])
-                      else (Queue (tail fs) bs)
+dequeue (Queue fs bs) = if null fs 
+                        then (dequeue (Queue (bs) []))
+                            else if null (tail fs)
+                            then Queue bs []
+                            else (Queue (tail fs) bs)
 
-queueEx = Queue [3] [5,7,89]
+queueEx = Queue [] [5,7,89]
 
 reversa :: [a] -> [a]
 reversa []      = []
