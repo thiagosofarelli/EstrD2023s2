@@ -28,7 +28,7 @@ top (Stack xs s) = head xs
 pop :: Stack a -> Stack a
 --Dada una pila devuelve la pila sin el primer elemento.
 --La pila tiene al menos un elemento.
-pop (Stack xs s) = Stack (tail xs) s
+pop (Stack xs s) = Stack (tail xs) (s-1)
 
 lenS :: Stack a -> Int
 --Da la cantidad de elementos en la pila.

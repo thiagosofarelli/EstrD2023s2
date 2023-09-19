@@ -170,6 +170,25 @@ stackPrueba =  push 9 (push 3 emptyStack)
 stackPrueba2 :: Stack Int
 stackPrueba2 =  push 218 (push 12 (push 9 emptyStack))
 
-apilar :: [a] -> Stack [a]
-apilar [] = emptyStack
+apilar :: [a] -> Stack a
+apilar []     = emptyStack
 apilar (x:xs) = push x (apilar xs)
+
+desapilar :: Stack a -> [a]
+--Dada una pila devuelve una lista sin alterar el orden de los elementos.
+desapilar stack = if isEmptyStack (pop stack)
+                  then [top stack]
+                  else top stack : desapilar (pop stack)
+
+insertarEnPos :: Int -> a -> Stack a -> Stack a
+--Dada una posicion válida en la stack y un elemento, ubica dicho elemento en dicha
+--posición (se desapilan elementos hasta dicha posición y se inserta en ese lugar).
+--Precondición: n es una posición válida.
+insertarEnPos 0 e s = push e s 
+insertarEnPos n e s = insertarEnPos (n-1) e (pop s)
+
+-- 5. Queue con dos listas
+
+
+
+
