@@ -186,9 +186,3 @@ insertarEnPos :: Int -> a -> Stack a -> Stack a
 --Precondición: n es una posición válida.
 insertarEnPos 0 e s = push e s 
 insertarEnPos n e s = insertarEnPos (n-1) e (pop s)
-
--- 5. Queue con dos listas
-
-
-
-
