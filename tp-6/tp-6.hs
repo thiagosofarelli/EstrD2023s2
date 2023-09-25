@@ -50,14 +50,14 @@ asociarEqSubtarea (kv:kvs)  = assocM (fst kv) (snd kv) (asociarEqSubtarea kvs)
 agruparEqSubTarea :: Eq k => [(k, v)] -> [(k, [v])]
 -- Cuadrática
 agruparEqSubTarea []        = []
-agruparEqSubTarea (kv:kvs)  = juntarValores kv (agruparEqSubTarea kvs)
+agruparEqSubTarea ((k, v):kvs)  = juntarValores (k, v) (agruparEqSubTarea kvs)
     
 juntarValores :: Eq k => (k, v) -> [(k, [v])] -> [(k, [v])]
 -- Lineal
-juntarValores kv1  []      = [(fst kv1, [snd kv1])]
-juntarValores kv1 (kv:kvs) = if sonLaMismaClave (fst kv1) (fst kv)
-                             then (fst kv, (snd kv1:(snd kv))) : kvs
-                             else kv : juntarValores kv1 kvs
+juntarValores (k, v)  []      = [(k, [v])]
+juntarValores (k, v) (kv:kvs) = if sonLaMismaClave k (fst kv)
+                                then (fst kv, (v:(snd kv))) : kvs
+                                else kv : juntarValores (k, v) kvs
 
 sonLaMismaClave :: Eq k => k -> k -> Bool
 --Constante
