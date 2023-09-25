@@ -10,7 +10,7 @@ emptyM :: Map k v
 emptyM = M [] -- O(1)
 
 -- De esta manera, solo hay UNA CLAVE junto a SU ASOCIACIÓN. Es decir, no hay repetidas.
-{--assocM :: Eq k => k -> v -> Map k v -> Map k v
+assocM :: Eq k => k -> v -> Map k v -> Map k v
 --Propósito: agrega una asociación clave-valor al map.
 assocM k v (M kvs) = M (asociar k v kvs)
 
@@ -19,13 +19,13 @@ asociar k v [] = [(k, v)]
 asociar k v ((k', v'): kvs) = if k == k'
                               then (k', v):kvs
                               else (k', v') : asociar k v kvs
---} 
+ 
 
 -- De esta manera, puede haber claves repetidas, con distinta o misma asociación cada una.
-assocM :: Eq k => k -> v -> Map k v -> Map k v -- O(1)
+{--assocM :: Eq k => k -> v -> Map k v -> Map k v -- O(1)
 --Propósito: agrega una asociación clave-valor al map.
 -- Costo O(1)
-assocM k v (M kvs) = M ((k, v):kvs)
+assocM k v (M kvs) = M ((k, v):kvs)--}
 
 lookupM :: Eq k => k -> Map k v -> Maybe v
 --Propósito: encuentra un valor dado una clave.

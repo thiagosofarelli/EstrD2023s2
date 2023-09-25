@@ -2,7 +2,6 @@ import PriorityQueueV1
 import MapV1
 
 --emptyM, assocM, lookupM, deleteM, keys
-mapPrueba = assocM "Valija" "bolso con ropa" (assocM "Tesoro" "cofre de gran tamanio" emptyM)
 
 valuesM :: Eq k => Map k v -> [Maybe v]
 --Propósito: obtiene los valores asociados a cada clave del map.
@@ -45,7 +44,7 @@ agruparEq kvs  = asociarEqSubtarea (agruparEqSubTarea kvs)
 asociarEqSubtarea :: Eq k => [(k, [v])] -> Map k [v]
 -- Cuadrática
 asociarEqSubtarea []        = emptyM
-asociarEqSubtarea (kv:kvs)  = assocM (fst kv) (snd kv) (asociarEqSubtarea kvs)
+asociarEqSubtarea ((k, v):kvs)  = assocM k v (asociarEqSubtarea kvs)
 
 agruparEqSubTarea :: Eq k => [(k, v)] -> [(k, [v])]
 -- Cuadrática
@@ -63,10 +62,22 @@ sonLaMismaClave :: Eq k => k -> k -> Bool
 --Constante
 sonLaMismaClave k1 k2   = k1 == k2
 
---incrementar :: Eq k => [k] -> Map k Int -> Map k Int
+incrementar :: Eq k => [k] -> Map k Int -> Map k Int
 --Propósito: dada una lista de claves de tipo k y un map que va de k a Int, le suma uno a
 --cada número asociado con dichas claves.
+incrementar [] m     = m
+incrementar (k:ks) m = if elem k (keys m)
+                       then assocM k (fromJust (lookupM k m)+1) (incrementar ks m)
+                       else incrementar ks m
 
---mergeMaps:: Eq k => Map k v -> Map k v -> Map k v
+mergeMaps:: Eq k => Map k v -> Map k v -> Map k v
 --Propósito: dado dos maps se agregan las claves y valores del primer map en el segundo. Si
 --una clave del primero existe en el segundo, es reemplazada por la del primero.
+mergeMaps m1 m2 = agregarClavesYValores (mapToList m1) m2
+
+agregarClavesYValores :: Eq k => [(k, v)] -> Map k v -> Map k v
+agregarClavesYValores [] m = m
+agregarClavesYValores ((k, y):kvs) m = assocM k y (agregarClavesYValores kvs m)
+
+mapPrueba = assocM "Valija" "bolso con ropa" (assocM "Tesoro" "cofre de gran tamanio" emptyM)
+mapPrueba2 = assocM "Valija" "ropita" (assocM "Auto" "Lamborghini" emptyM)
