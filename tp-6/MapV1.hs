@@ -25,7 +25,7 @@ asociar k v ((k', v'): kvs) = if k == k'
 assocM :: Eq k => k -> v -> Map k v -> Map k v -- O(1)
 --Propósito: agrega una asociación clave-valor al map.
 -- Costo O(1)
-assocM k v (M kvs)= M ((k, v):kvs)
+assocM k v (M kvs) = M ((k, v):kvs)
 
 lookupM :: Eq k => k -> Map k v -> Maybe v
 --Propósito: encuentra un valor dado una clave.
