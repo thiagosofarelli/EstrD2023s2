@@ -50,7 +50,6 @@ delete k ((k', v'):kvs)= if k == k'
 keys :: Map k v -> [k]
 --Propósito: devuelve las claves del map.
 keys (M kvs) = keysL kvs
-
 keysL :: [(k, v)] -> [k] -- O(n)
 keysL       []     = []
 keysL ((k, v):kvs) = k : keysL kvs
