@@ -1,9 +1,10 @@
 import PriorityQueueV1
-import MapV1
+--import MapV1
+import MapV2 -- Con dos listas
 
 --emptyM, assocM, lookupM, deleteM, keys
 
-valuesM :: Eq k => Map k v -> [Maybe v]
+{--valuesM :: Eq k => Map k v -> [Maybe v]
 --Propósito: obtiene los valores asociados a cada clave del map.
 valuesM m = valores (keys m) m
 
@@ -78,6 +79,32 @@ mergeMaps m1 m2 = agregarClavesYValores (mapToList m1) m2
 agregarClavesYValores :: Eq k => [(k, v)] -> Map k v -> Map k v
 agregarClavesYValores [] m = m
 agregarClavesYValores ((k, y):kvs) m = assocM k y (agregarClavesYValores kvs m)
-
+--}
 mapPrueba = assocM "Valija" "bolso con ropa" (assocM "Tesoro" "cofre de gran tamanio" emptyM)
 mapPrueba2 = assocM "Valija" "ropita" (assocM "Auto" "Lamborghini" emptyM)
+
+indexar :: [a] -> Map Int a
+--Propósito: dada una lista de elementos construye un map que relaciona cada elemento con
+--su posición en la lista.
+indexar [] = emptyM
+indexar xs = indexarDesde 1 xs  
+
+indexarDesde :: Int -> [a] -> Map Int a
+indexarDesde _ [] = emptyM
+indexarDesde n (x:xs) = assocM n x (indexarDesde (n+1) xs)
+
+
+-- Falta modificar el siguiente error:
+{-- Si llamo a OCURRENCIAS HOOLA, me va a devolver
+un Map en el que una letra "O" va a tener el número 2,
+y otra letra "O" va a tener el número 1.--}
+
+ocurrencias :: String -> Map Char Int
+ocurrencias []           = emptyM
+ocurrencias (char:chars) = assocM char ((apariciones char chars) + 1) (ocurrencias chars)
+
+apariciones :: Eq a => a -> [a] -> Int
+apariciones _ []     = 0
+apariciones e (x:xs) = if e == x
+                         then 1 + apariciones e xs
+                         else apariciones e xs
