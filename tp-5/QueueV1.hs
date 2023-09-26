@@ -15,7 +15,7 @@ isEmptyQ (Queue xs) = null xs
 
 enqueue :: a -> Queue a -> Queue a
 --Dados un elemento y una cola, agrega ese elemento a la cola.
-enqueue x (Queue ls) = (Queue (ls ++ [x]))
+enqueue x (Queue ls) = Queue (ls ++ [x])
 
 firstQ :: Queue a -> a
 --Dada una cola devuelve el primer elemento de la cola
@@ -24,7 +24,7 @@ firstQ (Queue a) = head a
 
 dequeue :: Queue a -> Queue a
 --Dada una cola la devuelve sin su primer elemento.
-dequeue (Queue a) = (Queue (tail a))
+dequeue (Queue a) = Queue (tail a)
 
 
 
