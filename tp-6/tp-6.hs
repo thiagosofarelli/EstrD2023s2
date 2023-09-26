@@ -1,10 +1,10 @@
 import PriorityQueueV1
---import MapV1
-import MapV2 -- Con dos listas
+import MapV1
+--import MapV2 -- Con dos listas
 
 --emptyM, assocM, lookupM, deleteM, keys
 
-{--valuesM :: Eq k => Map k v -> [Maybe v]
+valuesM :: Eq k => Map k v -> [Maybe v]
 --Propósito: obtiene los valores asociados a cada clave del map.
 valuesM m = valores (keys m) m
 
@@ -40,24 +40,17 @@ agruparEq :: Eq k => [(k, v)] -> Map k [v]
 --Propósito: dada una lista de pares clave valor, agrupa los valores de los pares que compartan
 --la misma clave.
 -- Costo cúbico?
-agruparEq kvs  = asociarEqSubtarea (agruparEqSubTarea kvs)
-   
-asociarEqSubtarea :: Eq k => [(k, [v])] -> Map k [v]
--- Cuadrática
-asociarEqSubtarea []        = emptyM
-asociarEqSubtarea ((k, v):kvs)  = assocM k v (asociarEqSubtarea kvs)
+agruparEq []       = emptyM
+agruparEq (kv:kvs) = asociarConLista kv (agruparEq kvs)
 
-agruparEqSubTarea :: Eq k => [(k, v)] -> [(k, [v])]
--- Cuadrática
-agruparEqSubTarea []        = []
-agruparEqSubTarea ((k, v):kvs)  = juntarValores (k, v) (agruparEqSubTarea kvs)
+asociarConLista :: Eq k => (k, v) -> Map k [v] -> Map k [v]
+asociarConLista (k, v) map = if noEsNothing(lookupM k map)
+                             then assocM k (v:(fromJust (lookupM k map) )) map
+                             else assocM k [v] map
     
-juntarValores :: Eq k => (k, v) -> [(k, [v])] -> [(k, [v])]
--- Lineal
-juntarValores (k, v)  []      = [(k, [v])]
-juntarValores (k, v) (kv:kvs) = if sonLaMismaClave k (fst kv)
-                                then (fst kv, (v:(snd kv))) : kvs
-                                else kv : juntarValores (k, v) kvs
+noEsNothing :: Maybe v -> Bool
+noEsNothing Nothing = False
+noEsNothing _       = True
 
 sonLaMismaClave :: Eq k => k -> k -> Bool
 --Constante
@@ -79,7 +72,7 @@ mergeMaps m1 m2 = agregarClavesYValores (mapToList m1) m2
 agregarClavesYValores :: Eq k => [(k, v)] -> Map k v -> Map k v
 agregarClavesYValores [] m = m
 agregarClavesYValores ((k, y):kvs) m = assocM k y (agregarClavesYValores kvs m)
---}
+{--
 mapPrueba = assocM "Valija" "bolso con ropa" (assocM "Tesoro" "cofre de gran tamanio" emptyM)
 mapPrueba2 = assocM "Valija" "ropita" (assocM "Auto" "Lamborghini" emptyM)
 
@@ -108,3 +101,4 @@ apariciones _ []     = 0
 apariciones e (x:xs) = if e == x
                          then 1 + apariciones e xs
                          else apariciones e xs
+                         --}
