@@ -31,7 +31,7 @@ elUltimo (x:xs) = elUltimo xs
 
 dequeue :: Queue a -> Queue a
 --Dada una cola la devuelve sin su primer elemento.
-dequeue (Queue a) = (Queue (sinElUltimo a))
+dequeue (Queue a) = Queue (sinElUltimo a)
 
 sinElUltimo :: [a] -> [a]
 -- Es parcial, debe haber al menos un elemento en la lista
