@@ -44,7 +44,7 @@ deleteM k (M kvs) = M (delete k kvs)
 delete :: Eq k => k -> [(k, v)] -> [(k, v)] -- O(n)
 delete _ []      = []
 delete k ((k', v'):kvs)= if k == k'
-                             then delete k kvs
+                             then kvs
                              else (k', v') : delete k kvs
 
 keys :: Map k v -> [k]
