@@ -26,6 +26,28 @@ arbol1 = NodeT 15
                     (NodeT 22 EmptyT EmptyT))
                 (NodeT 30 EmptyT EmptyT))
 
+arbol2 :: Tree Int
+arbol2 =
+  NodeT 15
+    (NodeT 10
+      (NodeT 5
+        (NodeT 2 EmptyT EmptyT)
+        (NodeT 8 EmptyT (NodeT 11 EmptyT EmptyT)))
+      (NodeT 12 EmptyT EmptyT))
+    (NodeT 25
+      (NodeT 20
+        (NodeT 18 EmptyT EmptyT)
+        (NodeT 22 EmptyT EmptyT))
+      (NodeT 30
+        (NodeT 28
+          (NodeT 26
+            (NodeT 24
+              (NodeT 23 EmptyT EmptyT)
+              (NodeT 27 EmptyT EmptyT))
+            EmptyT)
+          EmptyT)
+        EmptyT))
+
 --1.
 belongsBST :: Ord a => a -> Tree a -> Bool
 --Propósito: dado un BST dice si el elemento pertenece o no al árbol.
@@ -93,24 +115,49 @@ splitMaxBST :: Ord a => Tree a -> (a, Tree a)
 splitMaxBST arbol = (maxBST arbol, delMaxBST arbol)
 
 --6. 
---esBST :: Tree a -> Bool
+esBST :: Ord a => Tree a -> Bool
 --Propósito: indica si el árbol cumple con los invariantes de BST.
 --Costo: O(N2)
+esBST EmptyT                = True
+esBST (NodeT x EmptyT EmptyT)= True
+esBST (NodeT x EmptyT der)= x < maxBST der
+esBST (NodeT x izq EmptyT)= x > maxBST izq
+esBST (NodeT x izq der) = x > maxBST izq && x < minBST der && esBST der && esBST izq
 
 --7. 
---elMaximoMenorA :: Ord a => a -> Tree a -> Maybe a
---Propósito: dado un BST y un elemento, devuelve el máximo elemento que sea menor al
+elMaximoMenorA :: Ord a => a -> Tree a -> Maybe a
+--Propósito: dado un elemento y un BST, devuelve el máximo elemento que sea menor al
 --elemento dado.
 --Costo: O(log N)
+elMaximoMenorA _ EmptyT = Nothing
+elMaximoMenorA x (NodeT e ti td) = if x <= e && noEsEmptyT ti
+                                    then elMaximoMenorA x ti
+                                    else if x > e && noEsEmptyT td
+                                        then elMaximoMenorA x td
+                                        else if x > e
+                                            then Just e
+                                            else Nothing
+
+noEsEmptyT :: Tree a -> Bool
+noEsEmptyT EmptyT = False
+noEsEmptyT _ = True
 
 --8. 
---elMinimoMayorA :: Ord a => a -> Tree a -> Maybe a
---Propósito: dado un BST y un elemento, devuelve el mínimo elemento que sea mayor al
+elMinimoMayorA :: Ord a => a -> Tree a -> Maybe a
+--Propósito: dado un elemento y un BST, devuelve el mínimo elemento que sea mayor al
 --elemento dado.
 --Costo: O(log N)
+elMinimoMayorA _ EmptyT = Nothing
+elMinimoMayorA x (NodeT e ti td) = undefined
 
---9. 
---balanceado :: Tree a -> Bool
+--9.
+balanceado :: Tree a -> Bool
 --Propósito: indica si el árbol está balanceado. Un árbol está balanceado cuando para cada
 --nodo la diferencia de alturas entre el subarbol izquierdo y el derecho es menor o igual a 1.
 --Costo: O(N2)
+balanceado EmptyT            = True
+balanceado (NodeT _ izq der) = abs ((altura izq) - (altura der)) <= 1 
+
+altura :: Tree a -> Int
+altura EmptyT = 0
+altura (NodeT _ izq der) = 1 + max (altura izq) (altura der)
