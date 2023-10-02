@@ -30,7 +30,11 @@ belongsBST :: Ord a => a -> Tree a -> Bool
 --Propósito: dado un BST dice si el elemento pertenece o no al árbol.
 --Costo: O(log N)
 belongsBST _ EmptyT = False
-belongsBST
+belongsBST x (NodeT e ti td) = 
+    if x == e then True
+    else if x < e 
+        then belongsBST x ti
+        else belongsBST x td 
 
 
 --2.
