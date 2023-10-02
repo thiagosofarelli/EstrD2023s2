@@ -6,6 +6,7 @@ del árbol. Justificar por qué la implementación satisface los costos dados.
 --}
 
 data Tree a = EmptyT | NodeT a (Tree a) (Tree a)
+    deriving Show
 {-- Inv. Rep.: BST
 ❏ todos los elementos de ti son menores que x
 ❏ todos los elementos de td son mayores que x
@@ -28,7 +29,7 @@ arbol1 = NodeT 15
 --1.
 belongsBST :: Ord a => a -> Tree a -> Bool
 --Propósito: dado un BST dice si el elemento pertenece o no al árbol.
---Costo: O(log N)
+--Costo: O(log N) - Se recorre solo una rama de un árbol balanceado. (Inv. Rep.: El arbol se encuentra balanceado.)
 belongsBST _ EmptyT = False
 belongsBST x (NodeT e ti td) = 
     if x == e then True
@@ -36,26 +37,60 @@ belongsBST x (NodeT e ti td) =
         then belongsBST x ti
         else belongsBST x td 
 
-
 --2.
---insertBST :: Ord a => a -> Tree a -> Tree a
+insertBST :: Ord a => a -> Tree a -> Tree a
 --Propósito: dado un BST inserta un elemento en el árbol.
---Costo: O(log N)
+--Costo: O(log N) - Se recorre solo una rama de un árbol balanceado. (Inv. Rep.: El arbol se encuentra balanceado.)
+insertBST x EmptyT = NodeT x EmptyT EmptyT
+insertBST x (NodeT e ti td) = 
+    if x == e then NodeT x ti td
+    else if x < e
+        then NodeT e (insertBST x ti) td
+        else NodeT e ti (insertBST x td)
 
 --3. 
---deleteBST :: Ord a => a -> Tree a -> Tree a
+deleteBST :: Ord a => a -> Tree a -> Tree a
 --Propósito: dado un BST borra un elemento en el árbol.
---Costo: O(log N)
+--Costo: O(log N) - Se recorre solo una rama de un árbol balanceado. (Inv. Rep.: El arbol se encuentra balanceado.)
+deleteBST _ EmptyT = EmptyT
+deleteBST x (NodeT e ti td) = 
+    if x == e then rearmarBST ti td
+    else if x < e 
+        then NodeT e (deleteBST x ti) td
+        else NodeT e ti (deleteBST x td)
+
+rearmarBST :: Ord a => Tree a -> Tree a -> Tree a
+ -- PRECOND: ambos árboles son BSTs
+rearmarBST EmptyT td = td
+rearmarBST ti td = NodeT (maxBST ti) (delMaxBST ti) td
+
+maxBST :: Ord a => Tree a -> a
+maxBST (NodeT x _ EmptyT) = x -- PRECOND: no es vacío
+maxBST (NodeT _ _ td) = maxBST td
+
+delMaxBST :: Ord a => Tree a -> Tree a
+delMaxBST (NodeT _ ti EmptyT) = ti -- PRECOND: no es vacío
+delMaxBST (NodeT x ti td) = NodeT x ti (delMaxBST td)
 
 --4. 
---splitMinBST :: Ord a => Tree a -> (a, Tree a)
+splitMinBST :: Ord a => Tree a -> (a, Tree a)
 --Propósito: dado un BST devuelve un par con el mínimo elemento y el árbol sin el mismo.
 --Costo: O(log N)
+splitMinBST arbol = (minBST arbol, delMinBST arbol)
+
+delMinBST :: Ord a => Tree a -> Tree a
+delMinBST (NodeT x EmptyT td) = td
+delMinBST (NodeT x ti td) = NodeT x (delMinBST ti) td 
+  
+minBST :: Ord a => Tree a -> a
+minBST (NodeT x EmptyT _) = x -- PRECOND: no es vacío
+minBST (NodeT x ti td) = minBST ti
 
 --5. 
---splitMaxBST :: Ord a => Tree a -> (a, Tree a)
+splitMaxBST :: Ord a => Tree a -> (a, Tree a)
 --Propósito: dado un BST devuelve un par con el máximo elemento y el árbol sin el mismo.
 --Costo: O(log N)
+splitMaxBST arbol = (maxBST arbol, delMaxBST arbol)
 
 --6. 
 --esBST :: Tree a -> Bool
