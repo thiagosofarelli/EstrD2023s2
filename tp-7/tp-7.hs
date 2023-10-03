@@ -269,7 +269,7 @@ agregarEmpleado :: [SectorId] -> CUIL -> Empresa -> Empresa
 agregarEmpleado [] cuil emp = agregarEmp cuil emp
 agregarEmpleado sectores cuil emp = let empleadoConSectoresIncorporados = incorporarSectores (consEmpleado cuil) sectores
                                     in ConsE (agregarEmpleadoASectores empleadoConSectoresIncorporados   sectores  (mapDeSectores emp)) 
-                                             (agregarEmpleadoAEmpresa  empleadoConSectoresIncorporados   (mapDeEmpleados emp))
+                                             (agregarEmpleadoM  empleadoConSectoresIncorporados   (mapDeEmpleados emp))
 
 agregarEmpleadoASectores :: Empleado -> [SectorID] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
 agregarEmpleadoASectores _ [] map       = map
@@ -277,8 +277,8 @@ agregarEmpleadoASectores emp (s:ss) map = if elem s (keys map)
                                           then assocM s (addS emp (lookupM s map)) (agregarEmpleadoASectores emp ss map) 
                                           else assocM s (addS emp emptyS) (agregarEmpleadoASectores emp ss map) 
 
-agregarEmpleadoAEmpresa :: Empleado -> Map CUIL Empleado -> Map CUIL Empleado
-agregarEmpleadoAEmpresa emp map = assocM (cuil emp) emp map
+agregarEmpleadoM :: Empleado -> Map CUIL Empleado -> Map CUIL Empleado
+agregarEmpleadoM emp map = assocM (cuil emp) emp map
 
 incorporarSectores :: Empleado -> [SectorID] -> Empleado
 incorporarSectores emp []     = emp
@@ -295,10 +295,24 @@ Recordatorio: "data Empresa = ConsE (Map SectorId (Set Empleado)) (Map CUIL Empl
 agregarASector :: SectorId -> CUIL -> Empresa -> Empresa
 --Propósito: agrega un sector al empleado con dicho CUIL.
 --Costo: calcular.
+agregarASector sector cuil (ConsE map1 map2) = let empleadoConSectorIncorporado = incorporarSector sector (consEmpleado cuil) -- Tengo q construirlo o hacerle lookup porque ese empleado ya existe?
+                                               in ConsE (agregarEmpleadoASector sector empleadoConSectorIncorporado map1) 
+                                                        (agregarEmpleadoM empleadoConSectorIncorporado map2) -- DUDA: Este empleado tengo q agregarlo o ya existe?
+
+agregarEmpleadoASector :: SectorID -> Empleado -> Map SectorID (Set Empleado) -> Map SectorID (Set Empleado)
+agregarEmpleadoASector sector emp map = if elem sector (keys map)
+                                        then assocM s (addS emp (lookupM s map)) map
+                                        else assocM s (addS emp emptyS) map
 
 borrarEmpleado :: CUIL -> Empresa -> Empresa
 --Propósito: elimina al empleado que posee dicho CUIL.
 --Costo: calcular.
+borrarEmpleado cuil (ConsE map1 map2) = ConsE (borrarEmpleadoDeSectores (sectores cuil) (lookupM cuil map2) map1) 
+                                              (deleteM cuil (mapDeEmpleados map2))
+
+borrarEmpleadoDeSectores :: [SectorID] -> Empleado -> Map SectorID (Set Empleado) -> Map SectorID (Set Empleado)
+borrarEmpleadoDeSectores [] emp map = map
+borrarEmpleadoDeSectores (s:ss) emp map = assocM s (removeS emp (lookupM s (borrarEmpleadoDeSectores ss emp map)))
 
 
 
