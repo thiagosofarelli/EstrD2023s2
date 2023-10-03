@@ -31,7 +31,7 @@ unionS :: Eq a => Set a -> Set a -> Set a
 unionS (Set xs) (Set ys) = Set (sinRepetidos (xs ++ ys))
 
 setToList :: Eq a => Set a -> [a]
-setToList (Set a) = sinRepetidos a
+setToList (Set a) = a
 
 -- Funciones que el usuario NO puede usar
 pertenece :: Eq a => a -> [a] -> Bool
