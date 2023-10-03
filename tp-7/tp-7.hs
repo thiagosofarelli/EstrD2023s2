@@ -238,14 +238,14 @@ buscarPorCUIL :: CUIL -> Empresa -> Empleado
 --Costo: O(log E) - Porque el costo de lookupM implementado con árboles es O(log e), siendo 'e' 
 --la cantidad de cuils/empleados 
 --Duda: Tengo que agregar la precondición de que EXISTE el empleado? Para poner luego el fromJust? o con solo el lookup esta bien y si tira nothing tambien esta bien?
-buscarPorCUIL cuil (ConsE _ map) = lookupM cuil map
+buscarPorCUIL cuil (ConsE _ map) = fromJust(lookupM cuil map)
 
 empleadosDelSector :: SectorId -> Empresa -> [Empleado]
 --Propósito: indica los empleados que trabajan en un sector dado.
 --Costo: O(logS + E) - Porque el costo de lookupM con arboles es logS (sectores) y setToList es constante. DUDA -- setToList es constante o lineal? A que se refieren con 'E'?
 --Duda: Tengo que agregar la precondición de que EXISTE el sector? Para poner luego el fromJust? o con solo el lookup esta bien y si tira nothing tambien esta bien?
 buscarPorCUIL cuil (ConsE _ map) = lookupM cuil map
-empleadosDelSector sector (ConsE map _) = setToList (lookupM sector map)
+empleadosDelSector sector (ConsE map _) = setToList (fromJust(lookupM sector map))
 
 todosLosCUIL :: Empresa -> [CUIL]
 --Propósito: indica todos los CUIL de empleados de la empresa.
@@ -274,7 +274,7 @@ agregarEmpleado sectores cuil emp = let empleadoConSectoresIncorporados = incorp
 agregarEmpleadoASectores :: Empleado -> [SectorID] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
 agregarEmpleadoASectores _ [] map       = map
 agregarEmpleadoASectores emp (s:ss) map = if elem s (keys map)
-                                          then assocM s (addS emp (lookupM s map)) (agregarEmpleadoASectores emp ss map) 
+                                          then assocM s (addS emp (fromJust(lookupM s map))) (agregarEmpleadoASectores emp ss map) 
                                           else assocM s (addS emp emptyS) (agregarEmpleadoASectores emp ss map) 
 
 agregarEmpleadoM :: Empleado -> Map CUIL Empleado -> Map CUIL Empleado
@@ -301,18 +301,18 @@ agregarASector sector cuil (ConsE map1 map2) = let empleadoConSectorIncorporado 
 
 agregarEmpleadoASector :: SectorID -> Empleado -> Map SectorID (Set Empleado) -> Map SectorID (Set Empleado)
 agregarEmpleadoASector sector emp map = if elem sector (keys map)
-                                        then assocM s (addS emp (lookupM s map)) map
+                                        then assocM s (addS emp (fromJust(lookupM s map))) map
                                         else assocM s (addS emp emptyS) map
 
 borrarEmpleado :: CUIL -> Empresa -> Empresa
 --Propósito: elimina al empleado que posee dicho CUIL.
 --Costo: calcular.
-borrarEmpleado cuil (ConsE map1 map2) = ConsE (borrarEmpleadoDeSectores (sectores cuil) (lookupM cuil map2) map1) 
+borrarEmpleado cuil (ConsE map1 map2) = ConsE (borrarEmpleadoDeSectores (sectores cuil) (fromJust(lookupM cuil map2)) map1) 
                                               (deleteM cuil (mapDeEmpleados map2))
 
 borrarEmpleadoDeSectores :: [SectorID] -> Empleado -> Map SectorID (Set Empleado) -> Map SectorID (Set Empleado)
 borrarEmpleadoDeSectores [] emp map = map
-borrarEmpleadoDeSectores (s:ss) emp map = assocM s (removeS emp (lookupM s (borrarEmpleadoDeSectores ss emp map)))
+borrarEmpleadoDeSectores (s:ss) emp map = assocM s (removeS emp (fromJust(lookupM s (borrarEmpleadoDeSectores ss emp map))))
 -- DUDA: Hace falta poner fromjust en el lookupS? por si el sector no existe? o con la preocndicion de q todos
 -- los sectores existen ya estaria?
 
