@@ -268,14 +268,27 @@ agregarEmpleado :: [SectorId] -> CUIL -> Empresa -> Empresa
 --Costo: calcular.
 agregarEmpleado [] cuil emp = agregarEmp cuil emp
 agregarEmpleado sectores cuil emp = let empleadoConSectoresIncorporados = incorporarSectores (consEmpleado cuil) sectores
-                                    in ConsE (agregarEmpleadoASectores empleadoConSectoresIncorporados           sectores       (sectoresConEmpleadoDeEmpresa emp)) 
-                                             (agregarEmpleadoAEmpresa  cuil    empleadoConSectoresIncorporados      (mapDeEmpleados emp))
+                                    in ConsE (agregarEmpleadoASectores empleadoConSectoresIncorporados   sectores  (mapDeSectores emp)) 
+                                             (agregarEmpleadoAEmpresa  empleadoConSectoresIncorporados   (mapDeEmpleados emp))
 
 agregarEmpleadoASectores :: Empleado -> [SectorID] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
+agregarEmpleadoASectores _ [] map       = map
+agregarEmpleadoASectores emp (s:ss) map = if elem s (keys map)
+                                          then assocM s (addS emp (lookupM s map)) (agregarEmpleadoASectores emp ss map) 
+                                          else assocM s (addS emp emptyS) (agregarEmpleadoASectores emp ss map) 
 
 agregarEmpleadoAEmpresa :: Empleado -> Map CUIL Empleado -> Map CUIL Empleado
+agregarEmpleadoAEmpresa emp map = assocM (cuil emp) emp map
 
 incorporarSectores :: Empleado -> [SectorID] -> Empleado
+incorporarSectores emp []     = emp
+incorporarSectores emp (s:ss) = incorporarSector s (incorporarSectores emp ss)
+
+mapDeEmpleados :: Empresa -> Map CUIL Empleado
+mapDeEmpleados (ConsE _ map) = map
+
+mapDeSectores :: Empresa -> Map SectorId (Set Empleado)
+mapDeSectores (ConsE map _) = map
 
 Recordatorio: "data Empresa = ConsE (Map SectorId (Set Empleado)) (Map CUIL Empleado)"
 
