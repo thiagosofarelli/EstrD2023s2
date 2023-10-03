@@ -4,7 +4,7 @@ asociada al valor en la misma posición, pero de la otra lista.
 --}
 
 module MapV2 (
-    Map, emptyM, assocM, lookupM, deleteM--, keys
+    Map, emptyM, assocM, lookupM, deleteM, keys
 ) where
 
 data Map k v = M [k] [v]

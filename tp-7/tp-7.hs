@@ -48,6 +48,16 @@ arbol2 =
           EmptyT)
         EmptyT))
 
+arbol3 :: Tree Int
+arbol3 =
+  NodeT 1
+    (NodeT 2
+      (NodeT 3 EmptyT EmptyT)
+      (NodeT 4 EmptyT EmptyT))
+    (NodeT 5
+      (NodeT 6 EmptyT EmptyT)
+      (NodeT 7 EmptyT EmptyT))
+
 --1.
 belongsBST :: Ord a => a -> Tree a -> Bool
 --Propósito: dado un BST dice si el elemento pertenece o no al árbol.
@@ -161,3 +171,156 @@ balanceado (NodeT _ izq der) = abs ((altura izq) - (altura der)) <= 1
 altura :: Tree a -> Int
 altura EmptyT = 0
 altura (NodeT _ izq der) = 1 + max (altura izq) (altura der)
+
+-- Ejercicio 3
+-- Dada la siguiente interfaz y costos para el tipo abstracto Map:
+
+--emptyM :: Map k v
+--Costo: O(1).
+
+--assocM :: Ord k => k -> v -> Map k v -> Map k v
+--Costo: O(log K).
+
+--lookupM :: Ord k => k -> Map k v -> Maybe v
+--Costo: O(log K).
+
+--deleteM :: Ord k => k -> Map k v -> Map k v
+--Costo: O(log K).
+
+--keys :: Map k v -> [k]
+--Costo: O(K).
+
+-- Recalcular el costo de las funciones como usuario de Map de la práctica anterior, siendo K es la
+-- cantidad de claves del Map. Justificar las respuestas.
+
+{-
+valuesM O(K log K)
+
+listToMap O(K log K)
+
+mapToList O(K log K)
+
+agruparEq O(n^2)
+
+incrementar O(n^2)
+
+mergeMaps O(n^2)
+
+indexar O(n log K)
+-}
+
+-- Dado la siguiente representación para el tipo abstracto Empresa:
+
+type SectorId = Int
+
+type CUIL = Int
+
+data Empresa = ConsE (Map SectorId (Set Empleado)) (Map CUIL Empleado)
+
+{--Dicho esto, indicar invariantes de representación adecuados para la estructura y definir la
+siguiente interfaz de Empresa, respetando los costos dados y calculando los faltantes. Justificar
+todos los costos dados. En los costos, S es la cantidad de sectores de la empresa, y E es la
+cantidad de empleados.--}
+
+Interfaz Empresa
+{-INV. REP.: -- DUDA -- Hacen falta estas Inv. Rep.? Ya que serían inv. rep. propias de los sets (no hay repetidos) y de los maps (cada clave tiene un solo valor asociado).
+            * Todos los CUIL son únicos y están asociados a un solo empleado.
+            * Todos los SectorId son únicos.
+-}
+
+consEmpresa :: Empresa
+--Propósito: construye una empresa vacía.
+--Costo: O(1)
+consEmpresa = ConsE emptyM emptyM
+
+buscarPorCUIL :: CUIL -> Empresa -> Empleado
+--Propósito: devuelve el empleado con dicho CUIL.
+--Costo: O(log E) - Porque el costo de lookupM implementado con árboles es O(log e), siendo 'e' 
+--la cantidad de cuils/empleados 
+--Duda: Tengo que agregar la precondición de que EXISTE el empleado? Para poner luego el fromJust? o con solo el lookup esta bien y si tira nothing tambien esta bien?
+buscarPorCUIL cuil (ConsE _ map) = lookupM cuil map
+
+empleadosDelSector :: SectorId -> Empresa -> [Empleado]
+--Propósito: indica los empleados que trabajan en un sector dado.
+--Costo: O(logS + E) - Porque el costo de lookupM con arboles es logS (sectores) y setToList es constante. DUDA -- setToList es constante o lineal? A que se refieren con 'E'?
+--Duda: Tengo que agregar la precondición de que EXISTE el sector? Para poner luego el fromJust? o con solo el lookup esta bien y si tira nothing tambien esta bien?
+buscarPorCUIL cuil (ConsE _ map) = lookupM cuil map
+empleadosDelSector sector (ConsE map _) = setToList (lookupM sector map)
+
+todosLosCUIL :: Empresa -> [CUIL]
+--Propósito: indica todos los CUIL de empleados de la empresa.
+--Costo: O(E)
+todosLosCUIL (ConsE _ map) = keys map
+
+todosLosSectores :: Empresa -> [SectorId]
+--Propósito: indica todos los sectores de la empresa.
+--Costo: O(S)
+todosLosSectores (ConsE map _) = keys map
+
+agregarSector :: SectorId -> Empresa -> Empresa
+--Propósito: agrega un sector a la empresa, inicialmente sin empleados.
+--Costo: O(logS) ya que assocM es log K.
+agregarSector sector (ConsA map map2) = ConsA (assocM sector emptySet map) map2
+
+agregarEmpleado :: [SectorId] -> CUIL -> Empresa -> Empresa
+--Propósito: agrega un empleado a la empresa, en el que trabajará en dichos sectores y tendrá
+--el CUIL dado.
+--Costo: calcular.
+agregarEmpleado [] cuil emp = agregarEmp cuil emp
+agregarEmpleado sectores cuil emp = let empleadoConSectoresIncorporados = incorporarSectores (consEmpleado cuil) sectores
+                                    in ConsE (agregarEmpleadoASectores empleadoConSectoresIncorporados           sectores       (sectoresConEmpleadoDeEmpresa emp)) 
+                                             (agregarEmpleadoAEmpresa  cuil    empleadoConSectoresIncorporados      (mapDeEmpleados emp))
+
+agregarEmpleadoASectores :: Empleado -> [SectorID] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
+
+agregarEmpleadoAEmpresa :: Empleado -> Map CUIL Empleado -> Map CUIL Empleado
+
+incorporarSectores :: Empleado -> [SectorID] -> Empleado
+
+Recordatorio: "data Empresa = ConsE (Map SectorId (Set Empleado)) (Map CUIL Empleado)"
+
+agregarASector :: SectorId -> CUIL -> Empresa -> Empresa
+--Propósito: agrega un sector al empleado con dicho CUIL.
+--Costo: calcular.
+
+borrarEmpleado :: CUIL -> Empresa -> Empresa
+--Propósito: elimina al empleado que posee dicho CUIL.
+--Costo: calcular.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
