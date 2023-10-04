@@ -312,7 +312,7 @@ borrarEmpleado cuil (ConsE map1 map2) = ConsE (borrarEmpleadoDeSectores (sectore
 
 borrarEmpleadoDeSectores :: [SectorID] -> Empleado -> Map SectorID (Set Empleado) -> Map SectorID (Set Empleado)
 borrarEmpleadoDeSectores [] emp map = map
-borrarEmpleadoDeSectores (s:ss) emp map = assocM s (removeS emp (fromJust(lookupM s (borrarEmpleadoDeSectores ss emp map))))
+borrarEmpleadoDeSectores (s:ss) emp map = assocM s (removeS emp (fromJust(lookupM s (borrarEmpleadoDeSectores ss emp map)))) map
 -- DUDA: Hace falta poner fromjust en el lookupS? por si el sector no existe? o con la preocndicion de q todos
 -- los sectores existen ya estaria?
 
