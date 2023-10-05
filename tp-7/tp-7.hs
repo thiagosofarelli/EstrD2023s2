@@ -302,7 +302,8 @@ agregarASector :: SectorId -> CUIL -> Empresa -> Empresa
 --Costo: calcular.
 agregarASector sector cuil (ConsE map1 map2) = let empleadoConSectorIncorporado = incorporarSector sector (consEmpleado cuil) -- Tengo q construirlo o hacerle lookup porque ese empleado ya existe?
                                                in ConsE (agregarEmpleadoASector sector empleadoConSectorIncorporado map1) 
-                                                        (agregarEmpleadoM empleadoConSectorIncorporado map2) -- DUDA: Este empleado tengo q agregarlo o ya existe?
+                                                        (agregarEmpleadoM empleadoConSectorIncorporado map2) -- DUDA: Este empleado tengo q agregarlo o ya existe? - TENGO QUE AGREGARLO
+                                                        -- PORQUE SINO, CUANDO LE PREGUNTE LOS SECTORES AL EMPLEADO DE LA EMPRESA, NO LOS VA A TENER INCORPORADOS.
 
 agregarEmpleadoASector :: SectorID -> Empleado -> Map SectorID (Set Empleado) -> Map SectorID (Set Empleado)
 agregarEmpleadoASector sector emp map = if elem sector (keys map)
