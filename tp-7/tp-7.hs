@@ -224,10 +224,13 @@ cantidad de empleados.--}
 
 Interfaz Empresa
 {-INV. REP.: 
-            * Todos los empleados tienen asociado un solo CUIL.
-            * El CUIL del empleado debe ser el mismo con el que está asociado.
-            * Todos los empleados que trabajan en algún sector de la empresa, tienen un cuil asociado en la misma.
-            * Todos los empleados que trabajan en algún sector, deben tener el mismo incorporado.
+            Sea ConsE mss mce
+            * Todos los empleados de mce tienen asociado un solo CUIL.
+            * El CUIL del empleado debe ser el mismo con el que está asociado en mce.
+            * Todos los empleados que trabajan en algún sector de la empresa (mss),
+            tienen un cuil asociado en la misma (en mce).
+            * Todos los empleados que trabajan en algún sector (empleados de mce 
+            que se encuentran en mss), deben tener el mismo incorporado.
 -}
 
 consEmpresa :: Empresa
