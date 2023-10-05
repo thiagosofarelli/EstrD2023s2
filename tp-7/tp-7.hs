@@ -268,10 +268,13 @@ agregarEmpleado :: [SectorId] -> CUIL -> Empresa -> Empresa
 --Propósito: agrega un empleado a la empresa, en el que trabajará en dichos sectores y tendrá
 --el CUIL dado.
 --Costo: calcular.
-agregarEmpleado [] cuil emp = agregarEmp cuil emp
+agregarEmpleado [] cuil emp = agregarEmpSinSectores (consEmpleado cuil) emp
 agregarEmpleado sectores cuil emp = let empleadoConSectoresIncorporados = incorporarSectores (consEmpleado cuil) sectores 
                                     in ConsE (agregarEmpleadoASectores empleadoConSectoresIncorporados   sectores  (mapDeSectores emp)) 
                                              (agregarEmpleadoM  empleadoConSectoresIncorporados   (mapDeEmpleados emp))
+
+agregarEmpSinSectores :: Empleado -> Empresa -> Empresa
+agregarEmpSinSectores empleado (ConsE _ map) = assocM (cuil empleado) empleado map
 
 agregarEmpleadoASectores :: Empleado -> [SectorID] -> Map SectorId (Set Empleado) -> Map SectorId (Set Empleado)
 agregarEmpleadoASectores _ [] map       = map
