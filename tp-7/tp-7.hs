@@ -300,7 +300,7 @@ mapDeSectores (ConsE map _) = map
 
 Recordatorio: "data Empresa = ConsE (Map SectorId (Set Empleado)) (Map CUIL Empleado)"
 
-agregarASector :: SectorId -> CUIL -> Empresa -> Empresa
+agregarASector :: SectorID -> CUIL -> Empresa -> Empresa
 --Propósito: agrega un sector al empleado con dicho CUIL.
 --Costo: calcular.
 agregarASector sector cuil (ConsE map1 map2) = let empleadoConSectorIncorporado = incorporarSector sector (consEmpleado cuil) -- Tengo q construirlo o hacerle lookup porque ese empleado ya existe?
@@ -323,9 +323,54 @@ borrarEmpleadoDeSectores :: [SectorID] -> Empleado -> Map SectorID (Set Empleado
 borrarEmpleadoDeSectores [] emp map = map
 borrarEmpleadoDeSectores (s:ss) emp map = assocM s (removeS emp (fromJust(lookupM s (borrarEmpleadoDeSectores ss emp map)))) map
 
+--Como usuario del tipo Empresa implementar las siguientes operaciones, 
+--calculando el costo obtenido al implementarlas, y justicando cada uno adecuadamente.
 
+comenzarCon :: [SectorId] -> [CUIL] -> Empresa
+--Propósito: construye una empresa con la información de empleados dada. Los sectores no
+--tienen empleados.
+--Costo: calcular.
+comenzarCon sectores cuils = agregarEmpleados (agregarSectores sectores (consEmpresa))
 
+agregarSectores :: [SectorID] -> Empresa -> Empresa
+agregarSectores [] empresa = empresa
+agregarSectores (s:ss) emp = agregarSector s (agregarSectores ss emp)
 
+agregarEmpleados :: [CUIL] -> Empresa -> Empresa
+agregarEmpleados [] empresa = empresa
+agregarEmpleados (c:cs) empresa = agregarEmpSinSectores (consEmpleado c) (agregarEmpleados cs empresa)
+
+recorteDePersonal :: Empresa -> Empresa
+--Propósito: dada una empresa elimina a la mitad de sus empleados (sin importar a quiénes).
+--Costo: calcular.
+recorteDePersonal empresa = borrarEmpleados (laMitadDeEmpleados (todosLosCUIL empresa) (length todosLosCUIL empresa)) empresa
+
+borrarEmpleados :: [CUIL] -> Empresa -> Empresa
+borrarEmpleados [] empresa = empresa
+borrarEmpleados (e:es) empresa = borrarEmpleado e (borrarEmpleados es empresa)
+
+laMitadDeEmpleados :: [CUIL] -> Int -> [CUIL]
+laMitadDeEmpleados [] _     = []
+laMitadDeEmpleados _ 0      = []
+laMitadDeEmpleados (c:cs) n = c : laMitadDeEmpleados cs (n-1) 
+
+convertirEnComodin :: CUIL -> Empresa -> Empresa
+--Propósito: dado un CUIL de empleado le asigna todos los sectores de la empresa.
+--Costo: calcular.
+convertirEnComodin cuil emp = agregarASectores (todosLosSectores emp) cuil emp
+
+agregarASectores :: [SectorID] -> CUIL -> Empresa -> Empresa
+agregarASectores [] _ emp = emp
+agregarASectores (s:ss) cuil emp = agregarASector s cuil (agregarASectores ss c emp)
+
+esComodin :: CUIL -> Empresa -> Bool
+--Propósito: dado un CUIL de empleado indica si el empleado está en todos los sectores.
+--Costo: calcular.
+esComodin cuil emp = estaEnTodosLosSectores (consEmpleado cuil) (todosLosSectores emp) empresa
+
+estaEnTodosLosSectores :: Empleado -> [SectorID] -> Empresa -> Bool
+estaEnTodosLosSectores empleado [] _           = True
+estaEnTodosLosSectores empleado (s:ss) empresa = elem empleado (empleadosDelSector s empresa) && estaEnTodosLosSectores empleado ss empresa
 
 
 
