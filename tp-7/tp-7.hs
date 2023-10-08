@@ -343,7 +343,7 @@ agregarEmpleados (c:cs) empresa = agregarEmpSinSectores (consEmpleado c) (agrega
 recorteDePersonal :: Empresa -> Empresa
 --Propósito: dada una empresa elimina a la mitad de sus empleados (sin importar a quiénes).
 --Costo: calcular.
-recorteDePersonal empresa = borrarEmpleados (laMitadDeEmpleados (todosLosCUIL empresa) (length todosLosCUIL empresa)) empresa
+recorteDePersonal empresa = borrarEmpleados (laMitadDeEmpleados (todosLosCUIL empresa) (length todosLosCUIL empresa div 2)) empresa
 
 borrarEmpleados :: [CUIL] -> Empresa -> Empresa
 borrarEmpleados [] empresa = empresa
