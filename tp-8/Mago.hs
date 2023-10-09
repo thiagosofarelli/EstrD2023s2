@@ -143,3 +143,4 @@ egresarExpertos edm = if not (hayUnExperto edm)
 
 -- BONUS --
 data Mago = M Nombre (Set Hechizo)
+--Inv. Rep.: Ninguno.
