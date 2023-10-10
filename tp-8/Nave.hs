@@ -122,7 +122,7 @@ datosDeSector :: SectorId -> Nave -> (Set Nombre, [Componente])
 datosDeSector sectorid (N ms mt ht) = let sector = fromJust(lookupM sectorid ms)
                                       in  (tripulantesS sector, componentesS sector)
 {--  Eficiencia: O(log S) + O(1) + O(1) + O(1) = O(log K)
-Justificación: Esta función tiene el costo O(log K) ya que realiza una búsqueda en K mediante la función lookupM.
+Justificación: Esta función tiene el costo O(log K) siendo K la cantidad de sectores en 'ms'.
     * tripulantesS tiene costo O(1).
     * componentesS tiene costo O(1).
     * fromJust tiene costo O(1).
@@ -131,40 +131,42 @@ Justificación: Esta función tiene el costo O(log K) ya que realiza una búsque
 
 tripulantesN :: Nave -> [Tripulante]
 --Propósito: Devuelve la lista de tripulantes ordenada por rango, de mayor a menor.
---Eficiencia: O(log T)
-{--  Eficiencia: O(log M) donde:
-    * listaTripulantes tiene costo O(log T).
+{--  Eficiencia: O(T log M) ya que la función listaTripulantes posee dicho costo.
 --}
 tripulantesN (N _ _ ht) = listaTripulantes ht
 
 listaTripulantes :: MaxHeap Tripulante -> [Tripulante]
 listaTripulantes ht = if isEmptyH ht
-                      then emptyH
+                      then []
                       else maxH ht : listaTripulantes (deleteMaxH ht)
-{--  Eficiencia: O(log T) donde:
+{--  Eficiencia: O(T) * (O(1) + O(1) + O(log M)) = O(T log M)
+Justificación: Esta función tiene el costo O(T log M) ya que por cada (T) tripulante de la heap,
+realiza una operación logarítmica.
     * isEmptyH tiene costo constante.
     * maxH tiene costo constante.
-    * deleteMaxH tiene costo O(log T) siendo T la cantidad de tripulantes en 'ht'. 
+    * deleteMaxH tiene costo O(log M) siendo M la cantidad de elementos de 'ht'. 
 --}
 
 agregarASector :: [Componente] -> SectorId -> Nave -> Nave
 --Propósito: Asigna una lista de componentes a un sector de la nave.
---Eficiencia: O(C + log S), siendo C la cantidad de componentes dados.
 agregarASector [] _ n = n
 agregarASector componentes sectorid (N ms mt ht) = let sectorConComponentes = agregarComponentes componentes (fromJust(lookupM sectorid ms))
                                                    in N (assocM sectorid sectorConComponentes ms) mt ht 
-{--  Eficiencia: O(C + log S) donde:
+{--  Eficiencia: O(C) + O(log K) + O(log K) = O(C + log K) 
+Justificación: Esta función tiene el costo O(C + log K) siendo K los sectores del map, y C la operación lineal a realizar.
+-- DUDA: Hay que explicar lo que HACE cada función diciendo 'ya que...' o directamente hay que poner 'siendo 'x' la cantidad de ...'?
     * agregarC tiene costo O(C)
     * fromJust tiene costo constante.
-    * lookupM tiene costo O(log S) siendo S la cantidad de sectores en 'ms'. -- DUDA: En este caso, al haber dos logS, se pone solo uno?
-    * assocM  tiene costo O(log S) siendo S la cantidad de sectores en 'ms'.
+    * lookupM tiene costo O(log K) siendo K la cantidad de sectores en 'ms'.
+    * assocM  tiene costo O(log K) siendo K la cantidad de sectores en 'ms'
 --}
 
 agregarComponentes :: [Componente] -> Sector -> Sector
 agregarComponentes [] sector = sector
 agregarComponentes (c:cs) sector = agregarC c (agregarComponentes cs sector)
-{--  Eficiencia: O(C) donde:
-    * agregarC tiene costo O(C) siendo C la cantidad de componentes a agregar.
+{--  Eficiencia: O(C)  
+Justificación: Esta función tiene el costo O(C) siendo C la cantidad de componentes a agregar. 
+    * agregarC tiene costo O(1).
 --}
 
 
