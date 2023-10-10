@@ -14,7 +14,7 @@ Implementaciones: BSTs, AVLs, Heaps.
 data EscuelaDeMagia = EDM (Set Hechizo) (Map Nombre Mago) (PriorityQueue Mago)
 
 {-- Inv. Rep.:
-- Sea EDM sh mnm pqm
+- Sea EDM sh mnm pqm:
 - El mago 'x' en mnm, tiene como nombre 'x'.
 - Todos los magos de 'mnm' se encuentran en 'pqm' y viceversa.
 - Todos los magos de 'mnm' pueden solo poseer hechizos que en encuentran en 'sh'.
