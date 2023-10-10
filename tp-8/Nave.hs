@@ -272,7 +272,7 @@ barrilesDeCadaSector (s:ss) nave = soloBarriles (snd (datosDeSector s nave)) ++ 
 -- * SoloBarriles - O(S)
 -- * SND - O(1)
 -- * datosDeSector (log S) pero por cada sector hago un log S, asi que es costo S log S
--- Eficiencia: O(S) y se cancela log S. DUDA: Esto es correcto?
+-- Eficiencia: O(S) y se cancela log S. DUDA: Esto es correcto? Debería ser cuadrática porque por cada barril, obtengo los sectores.
 
 soloBarriles :: [Componente] -> [Barril]
 soloBarriles [] = []
