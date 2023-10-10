@@ -209,6 +209,12 @@ modificarHeap trip heap = if trip == maxH heap
 sectores :: Nave -> Set SectorId
 --Propósito: Devuelve todos los sectores no vacíos (con tripulantes asignados).
 sectores nave = sectoresAsignadosA (tripulantesN nave) nave
+{--  Eficiencia: O(S log S + log T) donde:
+    * sectoresAsignadosA - O(S log S + log T)
+    * tripulantesN - O(log T) 
+    -- DUDA: Se cancela un log T?
+--}
+
 
 sectoresAsignadosA :: [Tripulante] -> Nave -> Set SectorID
 sectoresAsignadosA [] nave = emptyS
@@ -220,14 +226,59 @@ sectoresAsignadosA (t:ts) nave = unionS (sectoresAsignados (nombre t) nave) (sec
     -- DUDA: Sobre estos costos.
 --}
 
-sinSectoresAsignados :: Nave ->[Tripulante]
+sinSectoresAsignados :: Nave -> [Tripulante]
 --Propósito: Devuelve los tripulantes que no poseen sectores asignados.
+sinSectoresAsignados nave = sinSectoresAsignadosT (tripulantesN n)
+{- Eficiencia: O(T^N) - DUDA: log T no se utiliza ya que el peor caso es T^N? y son del mismo tipo?
+* sinSectoresAsignadosT - O(T^N)
+* TripulantesN - log T siendo T la cantidad de Tripulante
+-}
 
+sinSectoresAsignadosT :: [Tripulante] -> [Tripulante]
+sinSectoresAsignadosT [] = []
+sinSectoresAsignadosT (t:ts) = if noPoseeSector t
+                               then t : sinSectoresAsignadosT ts
+                               else sinSectoresAsignadosT ts
+{- Eficiencia: O(T^N) siendo T la cantida de tripulantes, y N los sectores asignados a cada tripulante) 
+-- DUDA: Esto es cuadrático porque a cada elemento de la lista [Tripulante] le hago una operación de costo lineal?
+* noPoseeSector - costo O(N)
+-}
+
+
+noPoseeSector :: Tripulante -> Bool
+noPoseeSector t = null (setToList (sectoresT t))
+{- Eficiencia: O(N)
+* setToList - costo O(N) siendo N la cantidad de elementos del conjunto.
+* sectoresT - costo constante
+* null      - costo constante
+-}
 
 barriles :: Nave -> [Barril]
 --Propósito: Devuelve todos los barriles de los sectores asignados de la nave.
+barriles nave = barrilesS (sectores nave) nave
 
+barrilesS :: Set SectorID -> Nave -> [Barril]
+barrilesS set nave = let sectoresID = setToList set 
+                     in barrilesDeCadaSector sectoresID nave
+
+barrilesDeCadaSector :: [SectorID] -> Nave -> [Barril]
+barrilesDeCadaSector [] _ = []
+barrilesDeCadaSector (s:ss) nave = soloBarriles (snd (datosDeSector s nave)) ++ (barrilesDeCadaSector ss nave)
+
+soloBarriles :: [Componente] -> [Barril]
+soloBarriles [] = []
+soloBarriles (c:cs) if esAlmacen c
+                    then barrilesDeAlmacen c ++ soloBarriles cs
+                    else soloBarriles cs
+
+esAlmacen :: Componente -> Bool
+esAlmacen (Almacen _) = True
+esAlmacen _ = False
+
+barrilesDeAlmacen :: Almacen [Barril] -> [Barril]
+barrilDelAlmacen (Almacen barriles) = barriles
 
 -----   Bonus  -----
 --Dar una posible representación para el tipo Sector, de manera de que se pueda cumplir con el orden dado para cada
 --operación de la interfaz, pero sin implementarlas.
+data Sector = S Nombre [Componente] (Set Nombre)
