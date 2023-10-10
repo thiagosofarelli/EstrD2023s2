@@ -79,51 +79,54 @@ data Nave = N (Map SectorId Sector) (Map Nombre Tripulante) (MaxHeap Tripulante)
 
 construir :: [SectorId] -> Nave
 --Propósito: Construye una nave con sectores vacíos, en base a una lista de identificadores de sectores.
---Eficiencia: O(S) ya que construirSectores es O(S)
+--Eficiencia: O(S log K) ya que construir sectores posee dicho costo.
 construir [] = N emptyM emptyM emptyH
 construir sectores = N (construirSectores sectores emptyM) emptyM emptyH
 
 construirSectores :: [SectorId] -> Map SectorId Sector -> Map SectorId Sector
 construirSectores [] ms = ms
 construirSectores (s:ss) ms = assocM s (crearS s) (construirSectores ss ms)
-{--  Eficiencia: O(S) donde:
-    * assocM tiene costo O(log S) siendo S los sectores a asociar a 'ms'.
-    * crearS tiene costo O(S) siendo S los sectores a crear.
+{--  Eficiencia: O(S) * O(log K) + O(1) = O(S log K)
+- Justificación: Esta función tiene el costo O(S log K) ya que por cada S (sector), realiza una
+operación logarítmica mediante el assocM.
+    * assocM tiene costo O(log K) siendo K los distintos sectores asociados a 'ms'.  
+    * crearS tiene costo O(1).
 --}
 
 ingresarT :: Nombre -> Rango -> Nave -> Nave
 --Propósito: Incorpora un tripulante a la nave, sin asignarle un sector.
---Eficiencia: O(log T)
 ingresarT nombre rango (N ms mt ht) = let t = crearT nombre rango
                                       in N ms (assocM nombre t mt) (insertH t ht)
-{--  Eficiencia: O(log M) donde:
+{--  Eficiencia: O(log K) + O(log M) + O(1) = O(log K + log M)
+- Justificación: Esta función tiene el costo O(log K + log M) donde K son los distintos
+tripulantes asociados a 'mt' y M son la cantidad de elementos en 'ht'.
     * crearT tiene costo constante.
-    * assocM tiene costo O(log T) siendo T el tripulante a asociar a 'mt'
-    * insertH tiene costo O(log T) siendo T el tripulante a insertar a 'ht'
+    * assocM tiene costo O(log K) siendo K los distintos tripulantes asociados a 'mt'.
+    * insertH tiene costo O(log M) siendo M la cantidad de elementos en 'ht'.
 --}
 
 sectoresAsignados :: Nombre -> Nave -> Set SectorId
 --Propósito: Devuelve los sectores asignados a un tripulante.
 --Precondición: Existe un tripulante con dicho nombre.
---Eficiencia: O(log M)
 sectoresAsignados nombre (N _ mt _) = sectoresT fromJust(lookupM nombre mt)
-{--  Eficiencia: O(log M) donde:
-    * sectoresT tiene costo constante.
-    * fromJust tiene costo constante.
-    * lookupM tiene costo O(log M) siendo M la cantidad de cantidad de elementos en el 'mt'. 
+{--  Eficiencia: O(log K) + O(1) + O(1) = O(log K)
+- Justificación: Esta función tiene el costo O(log K) siendo K los tripulantes asociados a 'mt'.
+    * sectoresT tiene costo O(1).
+    * fromJust tiene costo O(1).
+    * lookupM tiene costo O(log K) siendo K los distintos tripulantes asociados en 'mt'. 
 --}
 
 datosDeSector :: SectorId -> Nave -> (Set Nombre, [Componente])
 --Propósito: Dado un sector, devuelve los tripulantes y los componentes asignados a ese sector.
 --Precondición: Existe un sector con dicho id.
---Eficiencia: O(log S)
 datosDeSector sectorid (N ms mt ht) = let sector = fromJust(lookupM sectorid ms)
                                       in  (tripulantesS sector, componentesS sector)
-{--  Eficiencia: O(log M) donde:
-    * tripulantesS tiene costo constante.
-    * componentesS tiene costo constante.
-    * fromJust tiene costo constante.
-    * lookupM tiene costo O(log S) siendo S la cantidad de sectores en 'ms'. 
+{--  Eficiencia: O(log S) + O(1) + O(1) + O(1) = O(log K)
+Justificación: Esta función tiene el costo O(log K) ya que realiza una búsqueda en K mediante la función lookupM.
+    * tripulantesS tiene costo O(1).
+    * componentesS tiene costo O(1).
+    * fromJust tiene costo O(1).
+    * lookupM tiene costo O(log K) siendo K la cantidad de sectores en 'ms'. 
 --}
 
 tripulantesN :: Nave -> [Tripulante]
