@@ -86,7 +86,7 @@ construir sectores = N (construirSectores sectores emptyM) emptyM emptyH
 construirSectores :: [SectorId] -> Map SectorId Sector -> Map SectorId Sector
 construirSectores [] ms = ms
 construirSectores (s:ss) ms = assocM s (crearS s) (construirSectores ss ms)
-{--  Eficiencia: O(log M) donde:
+{--  Eficiencia: O(S) donde:
     * assocM tiene costo O(log S) siendo S los sectores a asociar a 'ms'.
     * crearS tiene costo O(S) siendo S los sectores a crear.
 --}
