@@ -256,27 +256,41 @@ noPoseeSector t = null (setToList (sectoresT t))
 barriles :: Nave -> [Barril]
 --Propósito: Devuelve todos los barriles de los sectores asignados de la nave.
 barriles nave = barrilesS (sectores nave) nave
+-- sectores nave tiene costo O(S log S + log T)
+-- barrilesS tiene costo O(S)
+-- Costo final sería O(S log S + log T) y se cancela O(S)? [DUDA]
 
 barrilesS :: Set SectorID -> Nave -> [Barril]
 barrilesS set nave = let sectoresID = setToList set 
                      in barrilesDeCadaSector sectoresID nave
+-- Eficiencia O(S) ya que se usa la función barrilesDeCadaSector
+-- También se usa setToList que es costo O(N). En este caso, como quedaría la eficiencia final? [DUDA]
 
 barrilesDeCadaSector :: [SectorID] -> Nave -> [Barril]
 barrilesDeCadaSector [] _ = []
 barrilesDeCadaSector (s:ss) nave = soloBarriles (snd (datosDeSector s nave)) ++ (barrilesDeCadaSector ss nave)
+-- * SoloBarriles - O(S)
+-- * SND - O(1)
+-- * datosDeSector (log S) pero por cada sector hago un log S, asi que es costo S log S
+-- Eficiencia: O(S) y se cancela log S. DUDA: Esto es correcto?
 
 soloBarriles :: [Componente] -> [Barril]
 soloBarriles [] = []
 soloBarriles (c:cs) if esAlmacen c
                     then barrilesDeAlmacen c ++ soloBarriles cs
                     else soloBarriles cs
+-- * esAlmacen - Constante
+-- * Eficiencia O(N) Lineal, por cada Almacen hago un append
+-- DUDA: Esta bien justificado?
 
 esAlmacen :: Componente -> Bool
 esAlmacen (Almacen _) = True
 esAlmacen _ = False
+-- * CONSTANTE -- DUDA: Hace falta justficar?
 
 barrilesDeAlmacen :: Almacen [Barril] -> [Barril]
 barrilDelAlmacen (Almacen barriles) = barriles
+-- * CONSTANTE -- DUDA: Hace falta justficar?
 
 -----   Bonus  -----
 --Dar una posible representación para el tipo Sector, de manera de que se pueda cumplir con el orden dado para cada
