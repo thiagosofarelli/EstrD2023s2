@@ -174,24 +174,34 @@ asignarASector :: Nombre -> SectorId -> Nave -> Nave
 --Propósito: Asigna un sector a un tripulante.
 --Nota: No importa si el tripulante ya tiene asignado dicho sector.
 --Precondición: El tripulante y el sector existen.
---Eficiencia: O(log S + log T + T log T) -- DUDA: Por que se pondría log T + T log T, y no cancelaríamos el log T ya que eneloguene (o sea, T log T) es peor?
-asignarASector nombre sectorid (N ms mt ht) = let t = asignarS sectorid (fromJust(lookupM nombre mt)) -- AsignarS O(log S)
+asignarASector nombre sectorid (N ms mt ht) = let t = asignarS sectorid (fromJust(lookupM nombre mt))
                                               in N (asignarASectorEnSectores sectorid nombre ms ) (asignarTripAMapT nombre t mt) (modificarHeap t ht)
+{--  Eficiencia: O(log K + log S + H log M) 
+Justificación: Esta función tiene el costo O 
+    * asignarS - O(log S) - Siendo S sectores
+    * fromJust - O(1)
+    * lookupM - O(log K) - Siendo K tripulantes
+    * asignarASectorEnSectores - O(log K + log T) siendo K sectores y T el tripulante.
+    * asignarTripAMapT - O(log K) siendo K los distintos tripulantes.
+    * modificarHeap - O(H log M) ya que por cada Heap realizo hasta operaciones logaritmicas M. 
+--}
 
 asignarASectorEnSectores :: SectorID -> nombre -> Map SectorID Sector -> Map SectorID Sector
 asignarASectorEnSectores sectorid nombre ms = let sector = fromJust(lookupM sectorid ms)
                                               in assocM sectorid (agregarT nombre sector) ms
-{--  Eficiencia: O(log S) donde:
-    * lookupM tiene costo O(log S)
+{--  Eficiencia: O(log K)+ O(log K) + O(log T) = O(log K + log T)
+Justificación: Esta función tiene el costo O(log K + log T) siendo K los distintos sectores de 'ms' y T el tripulante a asignar.
+    * lookupM tiene costo O(log K) - Siendo K los sectores de 'ms'.
     * fromJust tiene costo constante.
-    * assocM tiene costo O(log S)
-    * agregarT tiene costo O(log T) -- DUDA: ¿Esto sería un error? Ya que la función debe ser log S y agregarT tiene costo log T.
+    * assocM tiene costo O(log K) - Siendo K los sectores de 'ms'.
+    * agregarT tiene costo O(log T) - (DUDA - Es 'T' el tripulante a asignar?)
 --}
 
 asignarTripAMapT :: Nombre -> Tripulante -> Map Nombre Tripulante -> Map Nombre Tripulante
 asignarTripAMapT nombre trip mt = assocM nombre trip mt
-{--  Eficiencia: O(log T) donde:
-    * assocM tiene costo O(log T) siendo T el tripulante a asociar en 'mt'. -- DUDA: Esto está bien?
+{--  Eficiencia: O(log K) 
+Justificación: La función tiene costo O(log K) ya que utiliza la función assocM con dicho costo.
+* assocM tiene costo O(log K) siendo K los distintos tripulantes de 'mt'.
 --}
 
 modificarHeap :: Tripulante -> MaxHeap Tripulante -> MaxHeap Tripulante
@@ -200,13 +210,13 @@ modificarHeap :: Tripulante -> MaxHeap Tripulante -> MaxHeap Tripulante
 modificarHeap trip heap = if trip == maxH heap
                           then insertH trip (deleteMaxH heap)
                           else insertH (maxH heap) (modificarHeap trip (deleteMaxH Heap))
-{--  Eficiencia: O(T log T) donde:
-    * insertH tiene costo O(log T)
+{--  Eficiencia: O(H) * O(log M + log M + 1)  = (H log M)
+Justificación: La función tiene costo O(H log M) ya que por cada H (HEAP) realizo operaciones logarítmicas. [DUDA: Esta bien justificado?]
+    * insertH tiene costo O(log M) - Siendo M la cantidad de elementos en la heap.
     * maxH tiene costo constante.
-    * deleteMaxH tiene costo O(log T) -- DUDA: Como determino que esto es T log T, y no es log T? Ya que debería ser T log T.
-    La respuesta sería que es porque se hacen operaciones logarítmicas (las de insertH y las de deleteMaxH) por cada tripulante?
-    La respuesta sería porque en solo una línea de ejecución (la del else) estoy haciendo dos operaciones log T? 
+    * deleteMaxH tiene costo O(log M) - Siendo M la cantidad de elementos en la heap.
 --}
+
 
 --Usuario
 --Implementar las siguientes funciones como usuario del tipo Nave, indicando la eficiencia obtenida para cada operación:
@@ -214,21 +224,20 @@ modificarHeap trip heap = if trip == maxH heap
 sectores :: Nave -> Set SectorId
 --Propósito: Devuelve todos los sectores no vacíos (con tripulantes asignados).
 sectores nave = sectoresAsignadosA (tripulantesN nave) nave
-{--  Eficiencia: O(S log S + log T) donde:
-    * sectoresAsignadosA - O(S log S + log T)
-    * tripulantesN - O(log T) 
-    -- DUDA: Se cancela un log T?
+{--  Eficiencia: O(S^2 + T log M) = O(S^2 + T log M)
+    * sectoresAsignadosA - O(S^2)
+    * tripulantesN - O(T log M) 
 --}
 
 
 sectoresAsignadosA :: [Tripulante] -> Nave -> Set SectorID
 sectoresAsignadosA [] nave = emptyS
 sectoresAsignadosA (t:ts) nave = unionS (sectoresAsignados (nombre t) nave) (sectoresAsignadosA ts nave)
-{--  Eficiencia: O(S log S + log T) donde:
-    * unionS - S log S siendo S la cantidad de sectores
-    * sectoresAsignados - log T siendo T la cantidad de tripulantes
-    * nombre - constante
-    -- DUDA: Sobre estos costos.
+{--  Eficiencia: O(SET) * (O S log S + log K) = O(SET^2) 
+Justificación: Se realizan hasta operaciones lineales por cada set. -- DUDA
+    * unionS - O(S log S) siendo S la cantidad de sectores
+    * sectoresAsignados - O(log K) siendo K los Tripulantes.
+    * nombre - O(1)
 --}
 
 sinSectoresAsignados :: Nave -> [Tripulante]
