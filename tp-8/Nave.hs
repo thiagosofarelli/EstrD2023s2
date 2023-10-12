@@ -19,7 +19,7 @@ data Nave = N (Map SectorId Sector) (Map Nombre Tripulante) (MaxHeap Tripulante)
 - Los sectores de 'ms' tienen que tener un id igual al SectorID con el que estan asociados en 'ms'.
 - El nombre de cada Tripulante de 'mt' es el mismo con el que está asociado en 'mt'.
 - Todos los Tripulantes de 'mt' están en 'ht' y viceversa.
-- Todos los sectores en los que trabajan los tripulantes se encuentran en 'ms'.
+- Todos los sectores en los que trabajan los tripulantes se encuentran en 'ms', y todos los tripulantes de los sectores de 'ms' se encuentran en 'mt'.
 - Los sectores y el rango del Tripulante con nombre 'x' en mt, son los mismos sectores y rango del Tripulante con ese nombre en 'ht'.
 - En 'ht' no hay Tripulantes con el mismo nombre.
 --}
