@@ -303,8 +303,9 @@ esAlmacen (Almacen _) = True
 esAlmacen _ = False
 -- * CONSTANTE -- DUDA: Hace falta justficar?
 
-barrilesDeAlmacen :: Almacen [Barril] -> [Barril]
+barrilesDeAlmacen :: Componente -> [Barril]
 barrilDelAlmacen (Almacen barriles) = barriles
+-- Precondicion: el componente dado es un almacen.
 -- * CONSTANTE -- DUDA: Hace falta justficar?
 
 -----   Bonus  -----
