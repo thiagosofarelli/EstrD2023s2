@@ -131,10 +131,30 @@ bool perteneceR(char c, string s) {
 
 
 // 7. 
-int apariciones(char c, string s)
-// Propósito: devuelve la cantidad de apariciones de un char c en el string s.
+int apariciones(char c, string s) {
+    // Propósito: devuelve la cantidad de apariciones de un char c en el string s.
+    int apariciones = 0;
+    for (int i = 0; i < s.length(); i++) {
+        if (c == s[i]) {
+            apariciones += 1;
+        }
+    }
+    return apariciones;
+}
 
+int aparicionesRAux(char c, string s, int n) {
+    if (s[n-1] == c && n > 0) {
+        return (1 + aparicionesRAux (c, s, (n-1)));
+    }
 
+    if (s[n-1] != c && n > 0) {
+        return (aparicionesRAux (c, s, (n-1)));
+    }
+}
+
+int aparicionesR(char c, string s) {
+    return aparicionesRAux(c, s, s.length());
+}
 
 
 int main() {
@@ -167,6 +187,15 @@ int main() {
     cout << std::boolalpha;
     cout << perteneceR('o', "Thiago") << endl;
     cout << endl;
+    // Prueba de apariciones
+    cout << apariciones('t',"termotanque") << endl;
+     // Prueba de aparicionesR
+    cout << aparicionesR('t',"termotanque") << endl;
+    cout << endl;
+
+
+
+
     // OTRAS PRUEBAS
     string nombre = "Thiago"; // Tiene 6 caracteres, pero van del 0 al 5.
     cout << nombre.length() << endl; // Devuelve 6
