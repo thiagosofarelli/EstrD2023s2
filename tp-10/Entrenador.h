@@ -7,7 +7,7 @@ struct EntrenadorSt {
     int cantPokemon;
 };
 
-typdef EntrenadorSt* Entrenador;
+typedef EntrenadorSt* Entrenador;
 
 Entrenador consEntrenador(string nombre, int cantidad, Pokemon* pokemon);
 // Dado un nombre, una cantidad de pokémon, y un array de pokémon de ese tamaño, devuelve un entrenador.
@@ -28,3 +28,4 @@ Pokemon pokemonNro(int i, Entrenador e);
 bool leGanaATodos(Entrenador e1, Entrenador e2);
 // Dados dos entrenadores, indica si, para cada pokémon del segundo entrenador, el primero
 // posee al menos un pokémon que le gane.
+
