@@ -2,11 +2,16 @@
 #include "Persona.h"
 using namespace std;
 
+struct PersonaSt {
+    string nombre;
+    int edad;
+};
+
 Persona consPersona(string n) {
     PersonaSt* p = new PersonaSt;
     p->nombre = n;
     p-> edad = 0;
-    return(p);
+    return p;
 }
 
 string nombre(Persona p) {

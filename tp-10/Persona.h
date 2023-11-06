@@ -1,10 +1,7 @@
 #include <iostream>
 using namespace std;
 
-struct PersonaSt {
-  string nombre;
-  int    edad;
-};
+struct PersonaSt;
 
 typedef PersonaSt* Persona;
 
