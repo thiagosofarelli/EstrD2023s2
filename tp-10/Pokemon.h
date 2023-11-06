@@ -1,13 +1,7 @@
-#include <iostream>
 using namespace std;
-
+#include <iostream>
 typedef string TipoDePokemon;
-
-struct PokeSt {
-  TipoDePokemon tipo;
-  int vida;
-};
-
+struct PokeSt;
 typedef PokeSt* Pokemon;
 
 Pokemon consPokemon(TipoDePokemon tipo);

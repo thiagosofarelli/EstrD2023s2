@@ -1,12 +1,7 @@
 #include <iostream>
 using namespace std;
 
-struct EntrenadorSt {
-    string nombre;
-    Pokemon* pokemon;
-    int cantPokemon;
-};
-
+struct EntrenadorSt;
 typedef EntrenadorSt* Entrenador;
 
 Entrenador consEntrenador(string nombre, int cantidad, Pokemon* pokemon);

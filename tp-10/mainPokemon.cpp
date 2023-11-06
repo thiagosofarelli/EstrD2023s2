@@ -13,9 +13,5 @@ int main() {
     cout << "Energia luego de perder 20: " << energia(pikachu) << endl;
 
     
-    cout << "¿Pikachu supera a Bulbasaur?" << superaA(pikachu, bulbasaur) << endl;
-    delete pikachu;
-    delete bulbasaur;
-
-    return 0;
+    cout << "¿Pikachu supera a Bulbasaur? " << superaA(pikachu, bulbasaur) << endl;
 }

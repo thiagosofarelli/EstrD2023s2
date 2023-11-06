@@ -2,6 +2,11 @@
 using namespace std;
 #include "Pokemon.h"
 
+struct PokeSt {
+    TipoDePokemon tipo;
+    int vida;
+};
+
 Pokemon consPokemon(TipoDePokemon tipo){
   PokeSt* p = new PokeSt;
   p->tipo = tipo;

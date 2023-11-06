@@ -13,7 +13,4 @@ int main() {
 
     cambioDeNombre("Fausto", thiago);
     cout << "Nombre despues de cambiarlo: " << nombre(thiago) << endl;
-    delete thiago;
-
-    return 0;
 }
