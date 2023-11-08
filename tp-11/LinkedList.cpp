@@ -115,6 +115,12 @@ void DisposeIterator(ListIterator ixs){
 // Libera la memoria ocupada por el iterador.
 
 void DestroyL(LinkedList xs){ 
+    NodeL* temp = xs->primero;
+    while (xs->primero != NULL){
+        xs->primero = xs->primero->siguiente;
+        delete temp;
+        temp = xs->primero;
+    }
     delete xs;   
 }
 // Libera la memoria ocupada por la lista.
