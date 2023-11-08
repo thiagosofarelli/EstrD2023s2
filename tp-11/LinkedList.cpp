@@ -55,29 +55,66 @@ void Tail(LinkedList xs){
     } 
 }
 
-int length(LinkedList xs);
+int length(LinkedList xs){
+    return xs->cantidad;
+}
 // Devuelve la cantidad de elementos.
 
-void Snoc(int x, LinkedList xs);
+void Snoc(int x, LinkedList xs) {
+    NodoL* nodo = new NodoL;
+    nodo->elem = x;
+    nodo->siguiente = NULL;
+
+    if (xs->primero == NULL) {
+        xs->primero = nodo;
+    } else {
+        NodoL* temp = xs->primero;
+        while (temp->siguiente != NULL) {
+            temp = temp->siguiente;
+        }
+        temp->siguiente = nodo;
+    }
+
+    xs->cantidad++;
+}
 // Agrega un elemento al final de la lista.
 
-ListIterator getIterator(LinkedList xs);
+IteratorSt getIterator(LinkedList xs) {
+    IteratorSt* iter = new IteratorSt;
+    iter->current = xs->primero;
+    return iter;
+}
 // Apunta el recorrido al primer elemento.
 
-int current(ListIterator ixs);
+int current(ListIterator ixs){
+    return ixs->current->elem;
+}
 // Devuelve el elemento actual en el recorrido.
 
-void SetCurrent(int x, ListIterator ixs);
+void SetCurrent(int x, ListIterator ixs){
+    ixs->current->elem = x;
+}
 // Reemplaza el elemento actual por otro elemento.
 
-void Next(ListIterator ixs);
+void Next(ListIterator ixs){
+    if (ixs->current != NULL){
+        ixs->current = ixs->current->siguiente;
+    }
+   
+}
 // Pasa al siguiente elemento.
 
-bool atEnd(ListIterator ixs);
+bool atEnd(ListIterator ixs){
+    return(ixs->current == NULL);
+}
 // Indica si el recorrido ha terminado.
 
-void DisposeIterator(ListIterator ixs);
+void DisposeIterator(ListIterator ixs){
+    delete ixs;
+}
 // Libera la memoria ocupada por el iterador.
 
-void DestroyL(LinkedList xs);
+void DestroyL(LinkedList xs){ 
+    delete xs;   
+}
 // Libera la memoria ocupada por la lista.

@@ -11,5 +11,9 @@ int main() {
     cout << "Esta vacia? " << isEmpty(nuevaLL) << endl;
     Tail(nuevaLL);
     cout << "Al hacer TAIL, ahora la LinkedList es vacia? " << isEmpty(nuevaLL) << endl;
+    Cons(30, nuevaLL);
+    Cons(20, nuevaLL);
+    Cons(10, nuevaLL);
+    Snoc(40, nuevaLL);
     return 0; 
 }
