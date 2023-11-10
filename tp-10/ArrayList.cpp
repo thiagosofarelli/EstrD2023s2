@@ -79,6 +79,24 @@ void resize(int capacidad, ArrayList xs) {
     }
 }
 
+/* Otra forma de RESIZE
+//Decrementa o aumenta la capacidad del array 
+// En caso de decrementarla se pierden los elementos del final de la lista
+void resize(int capacidad, ArrayList xs) {
+    int* nuevosElementos = new int[capacidad];
+    int contador = 0;
+    for (int i = 0; i < capacidad && i < xs->cantidad; i++){
+        nuevosElementos[i] = xs->elementos[i];
+        contador++;
+    }
+    delete xs->elementos;
+    xs->elementos = nuevosElementos;
+    xs->capacidad = capacidad;
+    xs->cantidad  = contador;
+}
+
+*/
+
 void add(int x, ArrayList xs){
     if (xs->cantidad == xs-> capacidad){
         aumentar(xs->capacidad * 2, xs);
