@@ -54,7 +54,7 @@ void decrementar(int x, ArrayList xs) {
     for (; i < x && i < xs->cantidad; i++) {
         nuevosElementos[i] = xs->elementos[i];
     }
-    delete temp;  
+    delete[] temp;  
     xs->capacidad = x;
     xs->cantidad = i;  
     xs->elementos = nuevosElementos;
@@ -94,7 +94,6 @@ void resize(int capacidad, ArrayList xs) {
     xs->capacidad = capacidad;
     xs->cantidad  = contador;
 }
-
 */
 
 void add(int x, ArrayList xs){
